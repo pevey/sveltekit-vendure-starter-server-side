@@ -5,11 +5,18 @@ const config: CodegenConfig = {
    schema: process.env.VENDURE_API_URL,
    documents: ['src/**/*.{ts,svelte}', '!src/__generated__/*'],
    generates: {
-      './src/__generated__/': {
+      'src/lib/gql/': {
          preset: 'client',
          presetConfig: {
             gqlTagName: "gql",
          },
+         config: {
+            useTypeImports: true, // This is needed to avoid Vite/SvelteKit import errors
+            scalars: {
+                // This tells codegen that the `Money` scalar is a number
+                Money: 'number',
+            }
+         }
       },
    },
    ignoreNoDocuments: true
