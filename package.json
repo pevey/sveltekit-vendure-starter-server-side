@@ -4,7 +4,7 @@
    "private": true,
    "scripts": {
       "dev": "concurrently 'vite dev' 'yarn generate --watch'",
-      "build": "shx rm -rf ./build && vite build",
+      "build": "shx rm -rf ./build && yarn generate && vite build",
       "preview": "vite preview",
       "test": "yarn test:integration && yarn test:unit",
       "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
