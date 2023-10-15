@@ -1,8 +1,8 @@
 import type { PageServerLoad } from './$types'
-import vendure from '$lib/server/vendure'
+import { getProducts } from '$lib/vendure'
 
 export const load = (async () => {
    return {
-      products: await vendure.getProducts()
+      products: await getProducts({ take: 3})
    }
 }) satisfies PageServerLoad

@@ -3,9 +3,9 @@ import 'dotenv/config'
 
 const config: CodegenConfig = {
    schema: process.env.VENDURE_API_URL,
-   documents: ['src/**/*.{ts,svelte}', '!src/__generated__/*'],
+   documents: ['src/**/*.{ts,svelte}', '!src/lib/generated/*'],
    generates: {
-      'src/lib/gql/': {
+      'src/lib/generated/': {
          preset: 'client',
          presetConfig: {
             gqlTagName: "gql",

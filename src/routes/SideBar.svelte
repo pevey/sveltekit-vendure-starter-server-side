@@ -1,7 +1,9 @@
 <script lang="ts">
+   import type { Collection } from '$lib/generated/graphql'
    import { X, Menu } from 'lucide-svelte'
    import { createDialog } from '@melt-ui/svelte'
    import { fade, fly } from 'svelte/transition'
+   export let collections: Collection[]
    export let user: {}
    const { 
       elements: { trigger, portalled, overlay, content, close },
@@ -32,11 +34,9 @@
                   </button>
                </div>
                <div class="flex flex-col">
-                  <a href="/about" use:close class="py-2 px-3 mr-2 rounded-md font-medium text-lg hover:bg-stone-200">About Us</a>
-                  <a href="/blends" use:close class="py-2 px-3 mr-2 rounded-md font-medium text-lg hover:bg-stone-200">Blends</a>
-                  <a href="/single-origin" use:close class="py-2 px-3 mr-2 rounded-md font-medium text-lg hover:bg-stone-200">Single Origin</a>
-                  <a href="/flavored" use:close class="py-2 px-3 mr-2 rounded-md font-medium text-lg hover:bg-stone-200">Flavored</a>
-                  <a href="/wholesale" use:close class="py-2 px-3 mr-2 rounded-md font-medium text-lg hover:bg-stone-200">Wholesale</a>
+                  {#each collections as collection}
+                     <a href="/collection/{collection.slug}" use:close class="py-2 px-3 mr-2 rounded-md font-medium text-lg hover:bg-stone-200">{collection.name}</a>
+                  {/each}
                   {#if user}
                      <a href="/account" use:close class="py-2 px-3 mr-2 mt-12 rounded-md font-medium text-lg hover:bg-stone-200">Your Profile</a>
                      <form action="/auth?/logout" method="POST">

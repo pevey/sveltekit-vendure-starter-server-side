@@ -1,9 +1,10 @@
 <script lang="ts">
-   import NavLinks from './NavLinks.svelte'
+   import type { Collection } from '$lib/generated/graphql'
    import Cart from './Cart.svelte'
    import Account from './Account.svelte'
    import SearchBox from './SearchBox.svelte'
    import SideBar from './SideBar.svelte'
+   export let collections: Collection[]
    export let user: {}
    export let cart: {}
    export let count: number
@@ -16,7 +17,9 @@
             <img class="hidden h-auto w-auto md:block" src="/logo.png" alt="Louisiana Roasting Company">
          </a>
          <div class="hidden lg:block mr-auto lg:ml-6">
-            <NavLinks />
+            {#each collections as collection}
+               <a href="/collection/{collection.slug}" class="py-2 px-3 mr-2 rounded-md font-medium text-lg lg:hover:bg-stone-200">{collection.name}</a>
+            {/each}
          </div>
       </div>
       <div class="flex flex-grow align-middle items-center justify-between ml-4">
@@ -30,7 +33,7 @@
             <Account {user} />
          </div>
          <div class="lg:hidden">
-            <SideBar {user} />
+            <SideBar {collections} {user} />
          </div>
       </div>
    </div>
