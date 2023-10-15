@@ -122,3 +122,44 @@ export const getCollectionProducts = async function(slug: string) {
       slug,
    }).then((data) => data.search.items)
 }
+
+export const getProduct = async function(slug: string) {
+   if (!slug) return []
+   const GetProduct = gql(`
+      query GetProduct($slug: String!) {
+         product(slug: $slug) {
+            id
+            name
+            description
+            featuredAsset {
+               id
+               preview
+            }
+            assets {
+               id
+               preview
+            }
+            variants {
+               id
+               name
+               sku
+               stockLevel
+               currencyCode
+               price
+               priceWithTax
+               featuredAsset {
+                  id
+                  preview
+               }
+               assets {
+                  id
+                  preview
+               }
+            }
+         }
+      }
+   `)
+   return request(VENDURE_API_URL, GetProduct, {
+      slug,
+   }).then((data) => data.product)
+}
