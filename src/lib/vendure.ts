@@ -63,3 +63,62 @@ export const getCollections = async function() {
    `)
    return request(VENDURE_API_URL, GetCollections).then((data) => data.collections.items)
 }
+
+export const getCollection = async function(slug: string) {
+   if (!slug) return []
+   const GetCollection = gql(`
+      query GetCollection($slug: String!) {
+         collection(slug: $slug) {
+            id
+            name
+            slug
+            description
+            featuredAsset {
+               id
+               preview
+            }
+         }
+      }
+   `)
+   return request(VENDURE_API_URL, GetCollection, {
+      slug,
+   }).then((data) => data.collection)
+}
+
+export const getCollectionProducts = async function(slug: string) {
+   if (!slug) return []
+   const GetCollectionProducts = gql(`
+      query GetCollectionProducts($slug: String!, $skip: Int, $take: Int) {
+         search(
+         input: {
+            collectionSlug: $slug,
+            groupByProduct: true,
+            skip: $skip,
+            take: $take }
+         ) {
+            totalItems
+            items {
+               productName
+               slug
+               productAsset {
+                  id
+                  preview
+               }
+               priceWithTax {
+                  ... on SinglePrice {
+                     value
+                  }
+                  ... on PriceRange {
+                     min
+                     max
+                  }
+               }
+               currencyCode
+            }
+         }
+      }
+   `)
+   return request(VENDURE_API_URL, GetCollectionProducts, {
+      slug,
+   }).then((data) => data.search.items)
+}
