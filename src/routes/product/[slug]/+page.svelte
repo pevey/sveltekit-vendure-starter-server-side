@@ -20,7 +20,9 @@
    // let reviews = product.reviews as any
    // let images = product.images as any
    let tab: string = 'reviews'
-   console.log(data.product)
+console.log(data.product)
+   // @ts-ignore
+   let selectedVariantId: string = data?.product?.variants[0]?.id
 </script>
 
 
@@ -31,6 +33,21 @@
       <h2 id="information-heading" class="sr-only">Product information</h2>
       <!-- <Rating rating={product.rating} /> -->
       <p class="mt-6">{product.description}</p>
+      {#if (product.variants.length > 1)}
+         <div class="mt-6">
+            {#each product.variants as variant}
+               {#if (variant.id === selectedVariantId)}
+                  <button type="button" class="uppercase whitespace-nowrap px-3 py-2 mr-2 mb-2 rounded-lg text-sm font-medium text-gray-700 border-4 border-lime-600 bg-white hover:bg-white">
+                     {variant.name}
+                  </button>
+               {:else}
+                  <button type="button" on:click={() => { selectedVariantId = variant.id }} class="uppercase whitespace-nowrap px-3 py-2 mr-2 mb-2 rounded-lg text-sm font-medium text-gray-700 border border-gray-400 bg-white hover:bg-stone-200">
+                     {variant.name}
+                  </button>
+               {/if}
+            {/each}
+         </div>
+      {/if}
       <!-- {#each product.options as option}
       <div class="mt-6">
          <h3 class="text-sm font-medium">{option.title}</h3>
@@ -50,16 +67,16 @@
             </div>
          </div>
       </div>
-      {/each}
+      {/each} -->
       <div class="mt-6">
          <h3 class="text-sm font-medium">Price</h3>
          <div class="mt-1 flex items-baseline">
-            <p class="text-2xl font-bold">{formatPrice(product.variants[product.variants.findIndex(v => v.id === selectedVariantId)].prices[0].amount)}</p>
-            <p class="ml-1 text-sm font-medium text-gray-600">/ {product.variants[product.variants.findIndex(v => v.id === selectedVariantId)].title}</p>
+            <p class="text-xl font-semibold">{formatPrice(product.variants[product.variants.findIndex(v => v.id === selectedVariantId)].price)}</p>
+            <p class="ml-1 text-sm font-medium text-gray-600">/ {product.variants[product.variants.findIndex(v => v.id === selectedVariantId)].name}</p>
          </div>
-      </div> -->
+      </div> 
       <form action="/cart?/add" method="post" use:enhance={() => { return async ({ result }) => { if (result.type === 'success') { await invalidateAll() }}}}>
-         <!-- <input type="hidden" name="variantId" value="{product.variants[product.variants.findIndex(v => v.id === selectedVariantId)].id}" /> -->
+         <input type="hidden" name="variantId" value={selectedVariantId} />
          <button type="submit" class="mt-6 w-full items-center justify-center rounded-md border border-transparent bg-lime-600 px-5 py-3 text-base font-medium text-white hover:bg-lime-700">
             Add to Cart
          </button>
@@ -86,9 +103,9 @@
          </button>
       </div>
       {#if tab == 'reviews'}
-      <!-- <Reviews bind:reviewForm={reviewForm} {product} {user} {reviews} /> -->
+         <!-- <Reviews bind:reviewForm={reviewForm} {product} {user} {reviews} /> -->
       {:else if tab == 'faq'}
-      <FAQ/>
+         <FAQ/>
       {/if}
    </div>
 </div>

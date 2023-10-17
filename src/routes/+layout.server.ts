@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from './$types'
-import { getTopLevelCollections } from '$lib/vendure'
+import { getTopLevelCollections } from '$lib/server/vendure'
 
 export const load: LayoutServerLoad = async function ({ locals }) {
    return {

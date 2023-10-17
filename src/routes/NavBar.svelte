@@ -4,7 +4,7 @@
    import Account from './Account.svelte'
    import SearchBox from './SearchBox.svelte'
    import SideBar from './SideBar.svelte'
-   export let collections: Collection[]
+   export let collections: Collection[] = []
    export let user: {}
    export let cart: {}
    export let count: number
