@@ -1,7 +1,7 @@
 import type { Cookies } from '@sveltejs/kit'
 import { print } from 'graphql'
 import { gql } from '$lib/generated'
-import { superFetch, parseAuthHeader, parseAuthCookie } from './'
+import { query, parseAuthHeader, parseAuthCookie } from './'
 import { 
    VENDURE_API_URL, 
    VENDURE_AUTH_TYPE, 
@@ -46,35 +46,16 @@ export const addToCart = async function(locals: any, cookies: Cookies, variantId
          }
       }
    `)
-
-   const headers = new Headers({ 'Content-Type': 'application/json' })
-   if (CLOUDFLARE_ACCESS_ID && CLOUDFLARE_ACCESS_SECRET) {
-      headers.append('CF-Access-Client-Id', CLOUDFLARE_ACCESS_ID)
-      headers.append('CF-Access-Client-Secret', CLOUDFLARE_ACCESS_SECRET)
-   }
-   if (VENDURE_AUTH_TYPE === 'bearer' && locals && locals.token) {
-      headers.append('authorization', `Bearer ${locals.token}`)
-   } else if (VENDURE_AUTH_TYPE === 'cookie' && locals && locals.sid && locals.ssig) {
-      headers.append('Cookie', `sid=${locals.sid}; sidsig=${locals.ssig}`)
-   }
-
-   const response = await superFetch.query({
-      url: VENDURE_API_URL,
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-         query: print(AddItemToOrder),
-         variables: { variantId, quantity }
-      })
-   }).catch(() => { return null })
+   const response = await query({ document: AddItemToOrder, variables: { variantId, quantity }, locals })
    if (!response) return null
 
+   // Capture the credentials if new session is initiated for non-logged-in user when adding to cart
    if (VENDURE_AUTH_TYPE === 'bearer') await parseAuthHeader(response.headers, locals, cookies)
    else await parseAuthCookie(response.headers.getSetCookie(), locals, cookies)
 
    return await response.json()
-   .then((body) => body?.data?.addItemToOrder)
-   .catch((e) => {
+   .then((body:any) => body?.data?.addItemToOrder)
+   .catch((e: Error) => {
       console.log(e)
       return null
    })

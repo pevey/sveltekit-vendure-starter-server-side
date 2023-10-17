@@ -22,10 +22,11 @@ interface QueryOptions {
    ttl?: number
    revalidate?: boolean
    logLevel?: 'verbose' | 'limited' | 'silent'
+   rawResponse?: boolean
 }
 
 export const query = async function(options: QueryOptions) {
-   const { locals, document, variables, ...rest } = options
+   const { locals, document, variables, rawResponse,...rest } = options
 
    const headers = new Headers({ 'Content-Type': 'application/json' })
    if (CLOUDFLARE_ACCESS_ID && CLOUDFLARE_ACCESS_SECRET) {
@@ -37,8 +38,8 @@ export const query = async function(options: QueryOptions) {
    } else if (VENDURE_AUTH_TYPE === 'cookie' && locals && locals.sid && locals.ssig) {
       headers.append('Cookie', `sid=${locals.sid}; sidsig=${locals.ssig}`)
    }
-   
-   return await superFetch.query({
+
+   const response = await superFetch.query({
       url: VENDURE_API_URL,
       method: 'POST',
       headers,
@@ -48,9 +49,12 @@ export const query = async function(options: QueryOptions) {
       }),
       ...rest
    })
-   .then((response) => response?.json())
+
+   if (rawResponse) return response
+
+   else return await response?.json()
    .then((body) => body?.data)
-   .catch((e) => {
+   .catch((e: Error) => {
       console.log(e)
       return null
    })
