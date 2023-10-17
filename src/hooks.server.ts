@@ -1,12 +1,11 @@
 import type { Handle } from '@sveltejs/kit'
-// import medusa from '$lib/server/medusa'
+import { handleVendureRequest } from '$lib/server/vendure'
 
 export const handle: Handle = async ({ event, resolve }) => {
 
-   // MEDUSA SESSION MIDDLEWARE  
+   // VENDURE SESSION MIDDLEWARE  
    // Sets locals.user and locals.cart if they are found.
-   // event = await medusa.handleRequest(event)
-
+   event = await handleVendureRequest(event)
    const response = await resolve(event)
 
    // CACHE CONTROL	

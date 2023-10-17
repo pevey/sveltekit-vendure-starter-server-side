@@ -20,7 +20,7 @@
    // let reviews = product.reviews as any
    // let images = product.images as any
    let tab: string = 'reviews'
-console.log(data.product)
+// console.log(data.product)
    // @ts-ignore
    let selectedVariantId: string = data?.product?.variants[0]?.id
 </script>

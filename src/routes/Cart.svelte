@@ -1,15 +1,18 @@
 <script lang="ts">
+   import type { Order } from '$lib/generated/graphql'
    import { X, ShoppingCart } from 'lucide-svelte'
    import { createDialog } from '@melt-ui/svelte'
    import { fade, fly } from 'svelte/transition'
    import { enhance } from '$app/forms'
    import { invalidateAll } from '$app/navigation'
    import { formatPrice } from '$lib/utils'
-   export let cart: any
+   import VendureAsset from '$lib/components/VendureAsset.svelte'
+   export let cart: Order
    export let count: number
+console.log(cart)
    $: cart = cart
-   $: items = cart?.items || []
-   $: total = cart?.subtotal
+   $: lines = cart?.lines || []
+   $: total = cart?.subTotal
    const { 
       elements: { trigger, portalled, overlay, content, title, close },
       states: { open, } 
@@ -48,23 +51,27 @@
                Shopping Cart
             </h2>
             <ul role="list" class="divide-y divide-gray-200 border-t border-gray-200">
-               {#each items as item, i}
+               {#each lines as line, i}
                   <li class="flex py-6">
-                     <a data-sveltekit-reload href={`/product/${item.variant.product.handle}?variant=${item.variant_id}`} >
+                     <a data-sveltekit-reload href={`/product/${line.productVariant?.product?.slug}?variant=${line.productVariant.id}`} >
                         <div class="cursor-pointer flex-shrink-0">
-                           <img src={item.thumbnail} alt={item.description} class="h-24 w-auto rounded-md object-cover object-center sm:h-32 sm:w-auto">
+                           {#if line.featuredAsset?.preview}
+                              <VendureAsset preview={line.featuredAsset.preview} alt={line.productVariant.name} preset="thumb" class="h-24 w-auto rounded-md object-cover object-center sm:h-32 sm:w-auto" />
+                           {:else}
+                              <img src="/img/noimg.png" alt={line.productVariant.name} class="h-24 w-auto rounded-md object-cover object-center sm:h-32 sm:w-auto">
+                           {/if}
                         </div>
                      </a>
                      <div class="m-2 flex flex-1 flex-col sm:ml-6">
                         <div>
                            <div class="flex justify-between">
-                              <a data-sveltekit-reload href={`/product/${item.variant.product.handle}?variant=${item.variant_id}`} class="cursor-pointer text-sm">
-                                 <div class="font-medium text-gray-700 hover:text-gray-800">{item.title}</div>
-                                 <p class="mt-1 text-sm text-gray-500">{item.description}</p>
+                              <a data-sveltekit-reload href={`/product/${line.productVariant?.product?.slug}?variant=${line.productVariant.id}`} class="cursor-pointer text-sm">
+                                 <div class="font-medium text-gray-700 hover:text-gray-800">{line.productVariant.name}</div>
+                                 <p class="mt-1 text-sm text-gray-500">item.description</p>
                               </a>
                               <div>
-                                 <p class="ml-4 text-sm font-medium text-gray-900">{formatPrice(item.unit_price)}</p>
-                                 <p class="ml-4 text-sm text-gray-900 text-right">Qty: {item.quantity}</p>
+                                 <p class="ml-4 text-sm font-medium text-gray-900">{formatPrice(line.unitPrice)}</p>
+                                 <p class="ml-4 text-sm text-gray-900 text-right">Qty: {line.quantity}</p>
                               </div>
                            </div>
                         </div>
@@ -83,10 +90,10 @@
                                     if (result.type === 'success') invalidateAll()
                                     }}">
                                     {#each [1,2,3,4,5,6,7,8,9,10,11,12] as qty}
-                                    <option value={qty} selected={qty === item.quantity}>{qty}</option>
+                                    <option value={qty} selected={qty === line.quantity}>{qty}</option>
                                     {/each}
                               </select>
-                              <input type="hidden" name="itemId" value={item.id} />
+                              <input type="hidden" name="itemId" value={line.id} />
                            </form>
                            <form action="/cart?/remove" method="post" use:enhance={() => { 
                               return async ({ result }) => { 
@@ -99,7 +106,7 @@
                                        </svg>
                                     </button>                                        
                               </div>
-                              <input type="hidden" name="itemId" value={item.id} />
+                              <input type="hidden" name="itemId" value={line.id} />
                            </form>
                         </div>
                      </div>
@@ -111,7 +118,7 @@
                {/each}
             </ul>
             <section aria-labelledby="summary-heading" class="border-t border-gray-200 bg-white sticky bottom-0 py-6">
-               {#if items.length > 0}
+               {#if lines.length > 0}
                <h2 id="summary-heading" class="sr-only">Order summary</h2>
                <div>
                      <dl class="space-y-4">
