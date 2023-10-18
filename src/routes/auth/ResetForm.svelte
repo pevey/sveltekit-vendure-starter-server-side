@@ -8,7 +8,6 @@
    const dispatch = createEventDispatcher()
    export let data: PageData
    export let token: string = ''
-   export let code: string = ''
    let debug: boolean = true
    let reveal: boolean = false
 </script>
@@ -17,7 +16,7 @@
    timeoutMs: 8000, multipleSubmits: 'prevent'
 }}>
    {#if message}
-      <div class="text-gray-900 mt-2 text-sm" class:text-red-600={$page.status > 200}>
+      <div class="message" class:text-red-600={$page.status > 200}>
          {message}
       </div>
    {:else}
@@ -26,12 +25,7 @@
          <HiddenInput bind:value={token} />
       </Field>
       <Field {config} name="code">
-         <HiddenInput bind:value={code} />
-      </Field>
-      <Field {config} name="email">
-         <Label>Email</Label>
-         <Input type="email" />
-         <Validation />
+         <HiddenInput bind:value={data.code} />
       </Field>
       <Field {config} name="password">
          <Label>Password</Label>

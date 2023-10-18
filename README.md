@@ -33,8 +33,8 @@ mv .env.example .env
 `vendure-config.ts`
 ```js
 verifyEmailAddressUrl: 'http://localhost:5173/verify',
-passwordResetUrl: 'http://localhost:5173/password-reset',
-changeEmailAddressUrl: 'http://localhost:5173/verify-email-address-change'
+passwordResetUrl: 'http://localhost:5173/auth',
+changeEmailAddressUrl: 'http://localhost:5173/account'
 ```
 
 ## Running the app

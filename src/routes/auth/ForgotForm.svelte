@@ -14,7 +14,7 @@
    timeoutMs: 8000, multipleSubmits: 'prevent'
 }}>
    {#if message}
-      <div class="text-gray-900 mt-2 text-sm" class:text-red-600={$page.status > 200}>
+      <div class="message" class:text-red-600={$page.status > 200}>
          {message}
       </div>
    {:else}

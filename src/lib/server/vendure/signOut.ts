@@ -1,8 +1,8 @@
-import type { Cookies } from '@sveltejs/kit'
+import { redirect, type Cookies } from '@sveltejs/kit'
 import { gql } from '$lib/generated'
 import { query } from './'
 
-export const signOut = async function(locals: any, cookies: Cookies) {
+export const signOut = async function(locals: App.Locals, cookies: Cookies) {
    const SignOut = gql(`
       mutation LogOut {
          logout {
@@ -10,7 +10,7 @@ export const signOut = async function(locals: any, cookies: Cookies) {
          }
       }
    `)
-   const success = await query({ document: SignOut, locals })
+   const result = await query({ document: SignOut, locals })
    .then((response) => response?.json())
    .then((body) => body?.data?.logout)
    .catch((e: Error) => {
@@ -21,5 +21,5 @@ export const signOut = async function(locals: any, cookies: Cookies) {
    cookies.set('ssig', '', { path: '/', maxAge: 0 })
    locals.sid = ''
    locals.ssig = ''
-   return success
+   throw redirect(302, '/')
 }

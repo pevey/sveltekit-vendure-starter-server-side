@@ -17,7 +17,7 @@ export const removeFromCart = async function(locals: any, cookies: Cookies, orde
    const response = await query({ document: RemoveFromCart, variables: { orderLineId }, locals })
    if (!response) return null
 
-   // Capture the credentials if new session is initiated for non-logged-in user when adding to cart
+   // Capture the credentials
    await parseAuthCookie(response.headers.getSetCookie(), locals, cookies)
 
    return await response.json()
