@@ -14,7 +14,7 @@ export const updateCart = async function(locals: any, cookies: Cookies, orderLin
          }
       }
    `)
-   const response = await query({ document: UpdateCart, variables: { orderLineId, quantity }, locals, rawResponse: true })
+   const response = await query({ document: UpdateCart, variables: { orderLineId, quantity }, locals })
    if (!response) return null
 
    // Capture the credentials if new session is initiated for non-logged-in user when adding to cart

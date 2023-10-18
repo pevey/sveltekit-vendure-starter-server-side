@@ -17,11 +17,11 @@ interface QueryOptions {
    ttl?: number
    revalidate?: boolean
    logLevel?: 'verbose' | 'limited' | 'silent'
-   rawResponse?: boolean
 }
 
-export const query = async function(options: QueryOptions) {
-   const { locals, document, variables, rawResponse,...rest } = options
+// sends the graphql query and returns the raw response
+export const query = async function(options: QueryOptions): Promise<Response|null> {
+   const { locals, document, variables, ...rest } = options
 
    const headers = new Headers({ 'Content-Type': 'application/json' })
    if (CLOUDFLARE_ACCESS_ID && CLOUDFLARE_ACCESS_SECRET) {
@@ -32,7 +32,7 @@ export const query = async function(options: QueryOptions) {
       headers.append('Cookie', `session=${locals.sid}; session.sig=${locals.ssig}`)
    }
 
-   const response = await superFetch.query({
+   return await superFetch.query({
       url: VENDURE_API_URL,
       method: 'POST',
       headers,
@@ -41,13 +41,7 @@ export const query = async function(options: QueryOptions) {
          variables
       }),
       ...rest
-   })
-
-   if (rawResponse) return response
-
-   else return await response?.json()
-   .then((body) => body?.data)
-   .catch((e: Error) => {
+   }).catch((e: Error) => {
       console.log(e)
       return null
    })
@@ -67,7 +61,13 @@ export { handleVendureRequest } from './handleVendureRequest'
 export { parseAuthCookie } from './parseAuthCookie'
 export { parseAuthHeader } from './parseAuthHeader'
 export { removeFromCart } from './removeFromCart'
+export { requestPasswordReset } from './requestPasswordReset'
+export { resetPassword } from './resetPassword'
+export { signIn } from './signIn'
+export { signOut } from './signOut'
+export { signUp } from './signUp'
 export { updateCart } from './updateCart'
+export { verifyEmail } from './verifyEmail'
 
 
 

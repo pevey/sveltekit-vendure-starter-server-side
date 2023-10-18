@@ -18,6 +18,7 @@ export const getCollections = async function() {
       }
    `)
    return await query({ document: GetCollections })
-   .then((data) => data?.collections?.items)
+   .then((response) => response?.json())
+   .then((body) => body?.data?.collections?.items)
    .catch(() => { return null })
 }

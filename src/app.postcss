@@ -2,3 +2,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* FORMS */
+[data-fs-label] {
+   @apply block m-1 mt-4 text-gray-600 font-semibold text-sm;
+}
+[data-fs-input] {
+   @apply w-full block py-3 px-4 text-sm text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-purple-500 rounded-lg;
+}
+[data-fs-validation] {
+   @apply block my-2 text-sm text-red-600;
+}
+.button {
+   @apply inline-block w-full my-4 py-3 px-5 text-sm font-semibold text-white bg-orange-900 hover:bg-gray-900 rounded-md transition duration-200
+}
+.message {
+   @apply block my-8 text-lg font-semibold text-gray-600;
+}

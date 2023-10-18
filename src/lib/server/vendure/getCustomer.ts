@@ -13,7 +13,15 @@ export const getCustomer = async function(locals: App.Locals) {
          }
       }
    `)
+   // console.log('here')
+
+   // const response = await query({ document: GetCustomer, locals })
+   // console.log(response)
+   // const body = await response?.json()
+   // console.log(body)
+
    return await query({ document: GetCustomer, locals })
-   .then((data) => data?.activeCustomer)
+   .then((response) => response?.json())
+   .then((body) => body?.data?.activeCustomer)
    .catch(() => { return null })
 }

@@ -80,7 +80,7 @@
                            <div class="flex justify-between">
                               <a data-sveltekit-reload href={`/product/${line.productVariant?.product?.slug}?variant=${line.productVariant.id}`} class="cursor-pointer text-sm">
                                  <div class="font-medium text-gray-700 hover:text-gray-800">{line.productVariant.name}</div>
-                                 <p class="mt-1 text-sm text-gray-500">item.description</p>
+                                 <p class="mt-1 text-sm text-gray-500">Facet Values will go here</p>
                               </a>
                               <div>
                                  <p class="ml-4 text-sm font-medium text-gray-900">{formatPrice(line.unitPrice)}</p>

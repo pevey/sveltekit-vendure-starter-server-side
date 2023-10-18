@@ -35,6 +35,7 @@ export const getCollectionProducts = async function(slug: string) {
       }
    `)
    return await query({ document: GetCollectionProducts , variables: { slug } })
-   .then((data) => data?.search?.items)
+   .then((response) => response?.json())
+   .then((body) => body?.data?.search?.items)
    .catch(() => { return null })
 }

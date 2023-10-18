@@ -23,7 +23,13 @@ const documents = {
     "\n      query GetProducts($options: ProductListOptions) {\n         products(options: $options) {\n            totalItems\n            items {\n               id\n               name\n               slug\n               description\n               featuredAsset {\n                  id\n                  preview\n               }\n            }\n         }\n      }\n   ": types.GetProductsDocument,
     "\n      query GetTopLevelCollections {\n         collections(options: { topLevelOnly: true }) {\n            items {\n               id\n               slug\n               name\n               featuredAsset {\n                  id\n                  preview\n               }\n            }\n         }\n      }\n   ": types.GetTopLevelCollectionsDocument,
     "\n      mutation RemoveItemFromOrder($orderLineId: ID!) {\n         removeOrderLine(orderLineId: $orderLineId) {\n            ...ActiveOrder\n            ... on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   ": types.RemoveItemFromOrderDocument,
+    "\n      mutation RequestPasswordReset($emailAddress: String!) {\n         requestPasswordReset(emailAddress: $emailAddress) {\n            ... on Success {\n               success\n            }\n            ... on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   ": types.RequestPasswordResetDocument,
+    "\n      mutation ResetPassword($token: String! $password: String!) {\n         resetPassword(token: $token password: $password) {\n            ...on CurrentUser {\n               id\n               identifier\n            }\n            ... on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   ": types.ResetPasswordDocument,
+    "\n      mutation LogIn($emailAddress: String!, $password: String!, $rememberMe: Boolean!) {\n         login(username: $emailAddress, password: $password, rememberMe: $rememberMe) {\n            ... on  CurrentUser {\n               id\n               identifier\n            }\n            ... on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   ": types.LogInDocument,
+    "\n      mutation LogOut {\n         logout {\n            success\n         }\n      }\n   ": types.LogOutDocument,
+    "\n      mutation Register($input: RegisterCustomerInput!) {\n         registerCustomerAccount(input: $input) {\n            ... on Success {\n               success\n            }\n            ...on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   ": types.RegisterDocument,
     "\n      mutation AdjustOrderLine($orderLineId: ID!, $quantity: Int!) {\n         adjustOrderLine(orderLineId: $orderLineId, quantity: $quantity) {\n            ...ActiveOrder\n            ... on ErrorResult {\n                  errorCode\n                  message\n            }\n         }\n      }\n   ": types.AdjustOrderLineDocument,
+    "\n      mutation Verify($token: String!) {\n         verifyCustomerAccount(token: $token) {\n            ...on CurrentUser {\n               id\n               identifier\n            }\n            ...on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   ": types.VerifyDocument,
 };
 
 /**
@@ -83,7 +89,31 @@ export function gql(source: "\n      mutation RemoveItemFromOrder($orderLineId: 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n      mutation RequestPasswordReset($emailAddress: String!) {\n         requestPasswordReset(emailAddress: $emailAddress) {\n            ... on Success {\n               success\n            }\n            ... on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   "): (typeof documents)["\n      mutation RequestPasswordReset($emailAddress: String!) {\n         requestPasswordReset(emailAddress: $emailAddress) {\n            ... on Success {\n               success\n            }\n            ... on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n      mutation ResetPassword($token: String! $password: String!) {\n         resetPassword(token: $token password: $password) {\n            ...on CurrentUser {\n               id\n               identifier\n            }\n            ... on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   "): (typeof documents)["\n      mutation ResetPassword($token: String! $password: String!) {\n         resetPassword(token: $token password: $password) {\n            ...on CurrentUser {\n               id\n               identifier\n            }\n            ... on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n      mutation LogIn($emailAddress: String!, $password: String!, $rememberMe: Boolean!) {\n         login(username: $emailAddress, password: $password, rememberMe: $rememberMe) {\n            ... on  CurrentUser {\n               id\n               identifier\n            }\n            ... on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   "): (typeof documents)["\n      mutation LogIn($emailAddress: String!, $password: String!, $rememberMe: Boolean!) {\n         login(username: $emailAddress, password: $password, rememberMe: $rememberMe) {\n            ... on  CurrentUser {\n               id\n               identifier\n            }\n            ... on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n      mutation LogOut {\n         logout {\n            success\n         }\n      }\n   "): (typeof documents)["\n      mutation LogOut {\n         logout {\n            success\n         }\n      }\n   "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n      mutation Register($input: RegisterCustomerInput!) {\n         registerCustomerAccount(input: $input) {\n            ... on Success {\n               success\n            }\n            ...on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   "): (typeof documents)["\n      mutation Register($input: RegisterCustomerInput!) {\n         registerCustomerAccount(input: $input) {\n            ... on Success {\n               success\n            }\n            ...on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n      mutation AdjustOrderLine($orderLineId: ID!, $quantity: Int!) {\n         adjustOrderLine(orderLineId: $orderLineId, quantity: $quantity) {\n            ...ActiveOrder\n            ... on ErrorResult {\n                  errorCode\n                  message\n            }\n         }\n      }\n   "): (typeof documents)["\n      mutation AdjustOrderLine($orderLineId: ID!, $quantity: Int!) {\n         adjustOrderLine(orderLineId: $orderLineId, quantity: $quantity) {\n            ...ActiveOrder\n            ... on ErrorResult {\n                  errorCode\n                  message\n            }\n         }\n      }\n   "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n      mutation Verify($token: String!) {\n         verifyCustomerAccount(token: $token) {\n            ...on CurrentUser {\n               id\n               identifier\n            }\n            ...on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   "): (typeof documents)["\n      mutation Verify($token: String!) {\n         verifyCustomerAccount(token: $token) {\n            ...on CurrentUser {\n               id\n               identifier\n            }\n            ...on ErrorResult {\n               errorCode\n               message\n            }\n         }\n      }\n   "];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

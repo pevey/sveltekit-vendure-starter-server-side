@@ -46,6 +46,7 @@ export const getProduct = async function(slug: string) {
       }
    `)
    return await query({ document: GetProduct , variables: { slug } })
-   .then((data) => data?.product)
+   .then((response) => response?.json())
+   .then((body) => body?.data?.product)
    .catch(() => { return null })   
 }

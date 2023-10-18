@@ -1,38 +1,37 @@
-# create-svelte
+# SvelteKit eCommerce Store Starter App for Vendure
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+![Preview](https://github.com/pevey/sveltekit-medusa-starter/assets/7490308/e2b4fa4e-eb31-4082-aba3-b1cc26044ca0)
+
+If you are not familiar with Vendure, you can learn more on [the project web site](https://www.vendure.io/).  Vendure is an open-source, MIT-licensed, Node.js-based ecommerce backend with tons of flexibility.  You can use it to power practically any ecommerce application you could think of.
 
 ## Creating a project
 
-If you're seeing this, you've probably already done this step. Congrats!
-
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
+# install degit
+npm install -g degit
 
 # create a new project in my-app
-npm create svelte@latest my-app
+degit https://github.com/pevey/sveltekit-vendure-starter.git my-app
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Installing packages
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+cd my-app
+yarn install
 ```
 
-## Building
-
-To create a production version of your app:
+## Configuring a project
 
 ```bash
-npm run build
+mv .env.example .env
 ```
+- Open .env and add any required settings
 
-You can preview the production build with `npm run preview`.
+## Running the app
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+Make sure your Vendure backend is running first and that you configure the VENDURE_API_URL in your .env file or your shell environment.
+
+```bash
+yarn dev
+```

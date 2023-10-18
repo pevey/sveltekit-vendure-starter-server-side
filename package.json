@@ -32,7 +32,6 @@
       "shx": "^0.3.4",
       "svelte": "^4.0.5",
       "svelte-check": "^3.4.3",
-      "svelte-legos": "^0.2.2",
       "svelte-meta-tags": "^3.0.4",
       "sveltekit-search-params": "^1.0.15",
       "sveltekit-stripe": "^1.1.0",

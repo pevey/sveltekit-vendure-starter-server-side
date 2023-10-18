@@ -60,6 +60,7 @@ export const getCart = async function(locals: App.Locals, cookies: Cookies) {
       }
    `)
    return await query({ document: GetCart, locals })
-   .then((data) => data?.activeOrder)
+   .then((response) => response?.json())
+   .then((body) => body?.data?.activeOrder)
    .catch(() => { return null })
 }
