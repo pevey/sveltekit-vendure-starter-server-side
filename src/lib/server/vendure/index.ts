@@ -66,8 +66,8 @@ export { getTopLevelCollections } from './getTopLevelCollections'
 export { handleVendureRequest } from './handleVendureRequest'
 export { parseAuthCookie } from './parseAuthCookie'
 export { parseAuthHeader } from './parseAuthHeader'
-// export { removeFromCart } from './removeFromCart'
-// export { updateCart } from './updateCart'
+export { removeFromCart } from './removeFromCart'
+export { updateCart } from './updateCart'
 
 
 
