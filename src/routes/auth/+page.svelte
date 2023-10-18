@@ -11,7 +11,7 @@
 
    export let data: PageData
 
-   type state = 'signIn' | 'signUp' | 'signUpSuccess' | 'forgot' | 'forgotSuccess' | 'reset' | 'resetSuccess'
+   type state = 'signIn' | 'signUp' | 'forgot' | 'reset'
    let state = data.code? 'reset' : 'signIn'
    let token: string = '' // turnstile token
 
