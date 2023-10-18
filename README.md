@@ -28,6 +28,15 @@ mv .env.example .env
 ```
 - Open .env and add any required settings
 
+- To make development a bit easier, you can change the urls in the EmailPlugin configuration options in vendure-config.ts to match the default SvelteKit dev url: http://localhost:5173:
+
+`vendure-config.ts`
+```js
+verifyEmailAddressUrl: 'http://localhost:5173/verify',
+passwordResetUrl: 'http://localhost:5173/password-reset',
+changeEmailAddressUrl: 'http://localhost:5173/verify-email-address-change'
+```
+
 ## Running the app
 
 Make sure your Vendure backend is running first and that you configure the VENDURE_API_URL in your .env file or your shell environment.
