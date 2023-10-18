@@ -6,7 +6,6 @@ declare global {
       interface Locals {
          sid: string // session id
          ssig: string // session signature
-         token: string // bearer token
          user: any
          cart: any
       }

@@ -11,11 +11,9 @@ export const parseAuthCookie = async function(setCookie:string[] = [], locals:Ap
          let parsedCookie = cookie.parse(rawCookie)
          if (parsedCookie['session']) {
             locals.sid = parsedCookie['session']
-            let expires = new Date(parsedCookie['Expires'])
-            let maxAge = Math.floor((expires.getTime() - Date.now()) / 1000)
             cookies.set('sid', parsedCookie['session'], {
                path: '/',
-               maxAge: maxAge,
+               expires: new Date(parsedCookie['expires']),
                sameSite: 'strict',
                httpOnly: true,
                secure: true
@@ -24,11 +22,9 @@ export const parseAuthCookie = async function(setCookie:string[] = [], locals:Ap
          }
          if (parsedCookie['session.sig']) {
             locals.ssig = parsedCookie['session.sig']
-            let expires = new Date(parsedCookie['Expires'])
-            let maxAge = Math.floor((expires.getTime() - Date.now()) / 1000)
             cookies.set('ssig', parsedCookie['session.sig'], {
                path: '/',
-               maxAge: maxAge,
+               expires: new Date(parsedCookie['expires']),
                sameSite: 'strict',
                httpOnly: true,
                secure: true

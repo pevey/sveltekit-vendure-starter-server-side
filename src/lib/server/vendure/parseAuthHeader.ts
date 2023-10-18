@@ -9,7 +9,7 @@ export const parseAuthHeader = async function(headers: Headers, locals:App.Local
          locals.token = token
          cookies.set('token', token, {
             path: '/',
-            maxAge: 3600,
+            maxAge: 1000 * 60 * 60 * 24 * 365,
             sameSite: 'strict',
             httpOnly: true,
             secure: true

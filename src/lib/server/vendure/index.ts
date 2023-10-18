@@ -1,11 +1,6 @@
 import { SuperFetch } from 'sveltekit-superfetch'
 import { print, type ASTNode } from 'graphql'
-import { 
-   VENDURE_API_URL, 
-   VENDURE_AUTH_TYPE, 
-   CLOUDFLARE_ACCESS_ID, 
-   CLOUDFLARE_ACCESS_SECRET 
-} from '$env/static/private'
+import { VENDURE_API_URL, CLOUDFLARE_ACCESS_ID, CLOUDFLARE_ACCESS_SECRET } from '$env/static/private'
 
 export const superFetch = new SuperFetch({
    retry: 3,
@@ -33,10 +28,8 @@ export const query = async function(options: QueryOptions) {
       headers.append('CF-Access-Client-Id', CLOUDFLARE_ACCESS_ID)
       headers.append('CF-Access-Client-Secret', CLOUDFLARE_ACCESS_SECRET)
    }
-   if (VENDURE_AUTH_TYPE === 'bearer' && locals && locals.token) {
-      headers.append('authorization', `Bearer ${locals.token}`)
-   } else if (VENDURE_AUTH_TYPE === 'cookie' && locals && locals.sid && locals.ssig) {
-      headers.append('Cookie', `sid=${locals.sid}; sidsig=${locals.ssig}`)
+   if (locals && locals.sid && locals.ssig) {
+      headers.append('Cookie', `session=${locals.sid}; session.sig=${locals.ssig}`)
    }
 
    const response = await superFetch.query({
