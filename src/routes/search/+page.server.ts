@@ -1,5 +1,4 @@
 import type { PageServerLoad, Actions } from './$types'
-// import medusa from '$lib/server/medusa'
 import { searchProducts } from '$lib/server/vendure'
 import { fail } from '@sveltejs/kit'
 

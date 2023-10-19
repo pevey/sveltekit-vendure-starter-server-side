@@ -31,7 +31,6 @@ export const searchProducts = async function(input: SearchInput) {
    `)
    return await query({ document: SearchProducts , variables: { input } })
    .then((response) => response?.json())
-   // .then((body) => { console.log(body?.data?.search?.items); return body?.data?.search?.items })
    .then((body) => body?.data?.search?.items)
    .catch(() => { return null })
 }
