@@ -4,18 +4,19 @@ import { handleVendureRequest } from '$lib/server/vendure'
 export const handle: Handle = async ({ event, resolve }) => {
 
    // VENDURE SESSION MIDDLEWARE  
-   // Sets locals.user and locals.cart if they are found.
+   // Sets locals.user and locals.cart if a vendure session is found.
+   // If you have a large app where only part of the app functions as a shop, you may want
+   // to check the request path and only run this middleware if the path is /shop or similar.
    event = await handleVendureRequest(event)
+
+   // Required for all paths
    const response = await resolve(event)
 
-   // CACHE CONTROL	
-   // response.headers.set['Cache-Control'] = 'no-store, no-cache, must-revalidate, proxy-revalidate'
-   // response.headers.set['Cache-Control'] = 'public, max-age=0, s-maxage=1'
-   
    // SECURITY HEADERS
    // CSP directives are set elsewhere in svelte.config.js and added automatically by SvelteKit.
    // CSRF mitigation in SvelteKit is handled by header-checking and is enabled by default. More secure token-based CSRF mitigation must be added manually.
    // Token-based CSRF mitigation for the most sensitive endpoints/form actions is handled by Cloudflare Turnstile.
+   // The headers below provide additional security against XSS, clickjacking, MIME-type sniffing, and other attacks.
    response.headers.set('X-Frame-Options', 'DENY')
    response.headers.set('X-Content-Type-Options', 'nosniff')
    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')

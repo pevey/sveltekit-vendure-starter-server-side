@@ -29,7 +29,7 @@ export const searchProducts = async function(input: SearchInput) {
          }
       }
    `)
-   return await query({ document: SearchProducts , variables: { input } })
+   return await query({ document: SearchProducts, variables: { input } })
    .then((response) => response?.json())
    .then((body) => body?.data?.search?.items)
    .catch(() => { return null })

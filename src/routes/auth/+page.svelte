@@ -20,7 +20,6 @@
       invalidateAll()
       goto(data.rurl? data.rurl : '/')
    }
-
 </script>
 <AuthContainer>
    {#if !token}
