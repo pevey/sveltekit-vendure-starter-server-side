@@ -4,7 +4,7 @@
    import { createDialog } from '@melt-ui/svelte'
    import { fade, fly } from 'svelte/transition'
    export let collections: Collection[]
-   export let user: Customer|null = null
+   export let user: Customer|null
    const { 
       elements: { trigger, portalled, overlay, content, close },
       states: { open, } 

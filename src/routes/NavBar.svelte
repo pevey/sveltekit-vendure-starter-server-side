@@ -5,8 +5,8 @@
    import SearchBox from './SearchBox.svelte'
    import SideBar from './SideBar.svelte'
    export let collections: Collection[]
-   export let user: Customer|null = null
-   export let cart: Order|null = null
+   export let user: Customer|null
+   export let cart: Order|null
    export let count: number = 0
 </script>
 <nav class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 bg-transparent">
