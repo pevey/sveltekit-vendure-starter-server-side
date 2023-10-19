@@ -2,7 +2,7 @@ import type { Cookies } from '@sveltejs/kit'
 import { gql } from '$lib/generated'
 import { query, parseAuthCookie } from './'
 
-export const signIn = async function(locals: any, cookies: Cookies, email: string, password: string) {
+export const signIn = async function(locals: any, cookies: Cookies, emailAddress: string, password: string) {
    const SignIn = gql(`
       mutation LogIn($emailAddress: String!, $password: String!, $rememberMe: Boolean!) {
          login(username: $emailAddress, password: $password, rememberMe: $rememberMe) {
@@ -17,7 +17,7 @@ export const signIn = async function(locals: any, cookies: Cookies, email: strin
          }
       }
    `)
-   const response = await query({ document: SignIn, variables: { emailAddress: email, password, rememberMe: true }, locals })
+   const response = await query({ document: SignIn, variables: { emailAddress, password, rememberMe: true }, locals })
    if (!response) return null
    
    // Capture the credentials

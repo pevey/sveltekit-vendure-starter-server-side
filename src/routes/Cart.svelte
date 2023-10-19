@@ -8,12 +8,12 @@
    import { formatPrice } from '$lib/utils'
    import VendureAsset from '$lib/components/VendureAsset.svelte'
 
-   export let cart: Order
+   export let cart: Order|null
    export let count: number
 
    $: cart = cart
    $: lines = cart?.lines || []
-   $: total = cart?.subTotal
+   $: total = cart?.subTotal || 0
 
    const { 
       elements: { trigger, portalled, overlay, content, title, close },

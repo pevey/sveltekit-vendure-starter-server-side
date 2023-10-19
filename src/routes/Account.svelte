@@ -1,7 +1,8 @@
 <script lang="ts">
+   import type { Customer } from '$lib/generated/graphql'
    import { UserCircle2 } from 'lucide-svelte'
    import { createDropdownMenu } from '@melt-ui/svelte'
-   export let user: any | null = null
+   export let user: Customer | null = null
    const { 
       elements: { trigger, menu, item }
    } = createDropdownMenu({ 

@@ -1,13 +1,13 @@
 <script lang="ts">
-   import type { Collection } from '$lib/generated/graphql'
+   import type { Collection, Customer, Order } from '$lib/generated/graphql'
    import Cart from './Cart.svelte'
    import Account from './Account.svelte'
    import SearchBox from './SearchBox.svelte'
    import SideBar from './SideBar.svelte'
-   export let collections: Collection[] = []
-   export let user: {}
-   export let cart: {}
-   export let count: number
+   export let collections: Collection[]
+   export let user: Customer|null = null
+   export let cart: Order|null = null
+   export let count: number = 0
 </script>
 <nav class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 bg-transparent">
    <div class="flex flex-grow items-center justify-between mt-3">
@@ -19,6 +19,8 @@
          <div class="hidden lg:block mr-auto lg:ml-6">
             {#each collections as collection}
                <a href="/collection/{collection.slug}" class="py-2 px-3 mr-2 rounded-md font-medium text-lg lg:hover:bg-stone-200">{collection.name}</a>
+            {:else}
+               Error: No collections found
             {/each}
          </div>
       </div>

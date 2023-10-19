@@ -97,5 +97,6 @@ export const actions: Actions = {
 
    signOut: async ({ locals, cookies}) => {
       await signOut(locals, cookies)
+      throw redirect(302, '/auth')
    }
 }

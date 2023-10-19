@@ -1,10 +1,10 @@
 <script lang="ts">
-   import type { Collection } from '$lib/generated/graphql'
+   import type { Collection, Customer } from '$lib/generated/graphql'
    import { X, Menu } from 'lucide-svelte'
    import { createDialog } from '@melt-ui/svelte'
    import { fade, fly } from 'svelte/transition'
    export let collections: Collection[]
-   export let user: {}
+   export let user: Customer|null = null
    const { 
       elements: { trigger, portalled, overlay, content, close },
       states: { open, } 

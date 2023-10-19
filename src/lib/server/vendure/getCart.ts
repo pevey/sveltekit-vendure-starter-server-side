@@ -1,6 +1,6 @@
 import type { Cookies } from '@sveltejs/kit'
 import { gql } from '$lib/generated'
-import { query, parseAuthCookie } from './'
+import { query } from './'
 
 export const getCart = async function(locals: App.Locals, cookies: Cookies) {
    const GetCart = gql(`

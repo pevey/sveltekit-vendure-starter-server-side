@@ -41,10 +41,14 @@
          <div slot="footer">
             <div class="text-gray-900 text-sm text-center font-medium">
                <span>Don't have an account?&nbsp;&nbsp;</span>
-               <button type="button" on:click="{() => { state = 'signUp' }}" class="text-orange-900 hover:text-orange-700">Sign Up</button>
+               <button type="button" on:click="{() => { state = 'signUp' }}" class="text-orange-900 hover:text-orange-700">
+                  Sign Up
+               </button>
             </div>
             <div class="text-sm text-gray-900 text-center font-medium">
-               <button type="button" on:click="{() => { state = 'forgot' }}" class="mt-4 hover:text-gray-700">Forgot your password?</button>
+               <button type="button" on:click="{() => { state = 'forgot' }}" class="mt-4 hover:text-gray-700">
+                  Forgot your password?
+               </button>
             </div>
          </div>
       </SignInForm>
@@ -55,18 +59,23 @@
          <p class="text-lg text-gray-500 mb-6">Welcome! To create an account, please enter your email and choose a password below.</p>
          <div slot="footer" class="text-sm text-gray-900 text-center font-medium">
             <span>Already have an account?&nbsp;&nbsp;</span>
-            <button type="button" on:click="{() => { state = 'signIn' }}" class="text-orange-900 hover:text-orange-700">Sign In</button>
+            <button type="button" on:click="{() => { state = 'signIn' }}" class="text-orange-900 hover:text-orange-700">
+               Sign In
+            </button>
          </div>
       </SignUpForm>
 
    {:else if state === 'forgot'}
       <ForgotForm {data} {token} let:message>
          <h3 class="font-heading text-3xl text-gray-900 font-semibold text-center mb-4">Reset Your Password</h3>
+         <p class="text-lg text-gray-500 mb-6">Enter your email address to receive an email with a link to change your password.</p>
          <div slot="footer" class="pt-6 text-sm text-gray-900 text-center font-medium">
-            <button type="button" on:click="{() => { state = 'signIn' }}" class="text-gray-900 hover:text-orange-700">&larr;&nbsp; Sign In Instead</button>
+            <button type="button" on:click="{() => { state = 'signIn' }}" class="text-gray-900 hover:text-orange-700">
+               &larr;&nbsp; Sign In Instead
+            </button>
          </div>
       </ForgotForm>
-      
+
    {:else if state === 'reset'}
       <ResetForm {data} {token} let:message>
          <h3 class="font-heading text-3xl text-gray-900 font-semibold text-center mb-4">Choose a New Password</h3>

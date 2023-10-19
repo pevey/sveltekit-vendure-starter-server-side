@@ -1,5 +1,5 @@
 import { gql } from '$lib/generated'
-import { query } from '.'
+import { query } from './'
 
 export const resetPassword = async function(token: string, password: string) {
    const ResetPassword = gql(`

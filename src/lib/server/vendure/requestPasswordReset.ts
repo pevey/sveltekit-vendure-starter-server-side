@@ -1,7 +1,7 @@
 import { gql } from '$lib/generated'
-import { query } from '.'
+import { query } from './'
 
-export const requestPasswordReset = async function(email: string) {
+export const requestPasswordReset = async function(emailAddress: string) {
    const RequestPasswordReset = gql(`
       mutation RequestPasswordReset($emailAddress: String!) {
          requestPasswordReset(emailAddress: $emailAddress) {
@@ -15,7 +15,7 @@ export const requestPasswordReset = async function(email: string) {
          }
       }
    `)
-   return await query({ document: RequestPasswordReset, variables: { emailAddress: email } })
+   return await query({ document: RequestPasswordReset, variables: { emailAddress } })
    .then((response) => response?.json())
    .then((body) => body?.data?.requestPasswordReset)
    .catch((e: Error) => {
