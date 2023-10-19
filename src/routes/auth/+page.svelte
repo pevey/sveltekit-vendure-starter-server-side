@@ -80,5 +80,6 @@
       <ResetForm {data} {token} let:message>
          <h3 class="font-heading text-3xl text-gray-900 font-semibold text-center mb-4">Choose a New Password</h3>
       </ResetForm>
+      
    {/if}
 </AuthContainer>

@@ -9,7 +9,7 @@
    import { formatCurrency } from '$lib/saluna/utils'
    import SEO from '$lib/saluna/SEO.svelte'
    import Rating from '$lib/saluna/Rating.svelte'
-   import Reviews from '$lib/saluna/Reviews.svelte'
+   import ProductReviews from '$lib/saluna/ProductReviews.svelte'
    import FAQ from '$lib/saluna/FAQ.svelte'
    import Gallery from '$lib/saluna/Gallery.svelte'
    import Highlights from '$lib/saluna/Highlights.svelte'
@@ -100,7 +100,7 @@
          </button>
       </div>
       {#if tab == 'reviews'}
-         <Reviews bind:reviewForm={reviewForm} {product} {user} {reviews} />
+         <ProductReviews bind:reviewForm={reviewForm} {product} {user} {reviews} />
       {:else if tab == 'faq'}
          <FAQ/>
       {/if}
