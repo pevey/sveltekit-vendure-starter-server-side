@@ -8,7 +8,7 @@
    let debug: boolean = false
    let reveal: boolean = false
 </script>
-<Form {debug} action="?/signUp" form={data.signUpForm} schema={signUpReq} let:config let:message options={{ 
+<Form {debug} action="/auth?/signUp" form={data.signUpForm} schema={signUpReq} let:config let:message options={{ 
    onResult: () => { token = '' }, 
    timeoutMs: 8000, multipleSubmits: 'prevent'
 }}>

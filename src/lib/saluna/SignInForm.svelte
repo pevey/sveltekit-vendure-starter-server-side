@@ -10,8 +10,8 @@
    let debug: boolean = false
    let reveal: boolean = false
 </script>
-<Form {debug} action="?/signIn" form={data.signInForm} schema={signInReq} let:config let:message options={{ 
-   onResult: ({ result }) => { if (result.type === 'success') { dispatch('success') } else { token = '' } },
+<Form {debug} action="/auth?/signIn" form={data.signInForm} schema={signInReq} let:config let:message options={{ 
+   onResult: ({ result }) => { if (result.type === 'success') { dispatch('success') }; token = '' },
    timeoutMs: 8000, multipleSubmits: 'prevent'
 }}>
    <slot message={message} />

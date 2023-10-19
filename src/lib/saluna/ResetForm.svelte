@@ -7,7 +7,7 @@
    let debug: boolean = false
    let reveal: boolean = false
 </script>
-<Form {debug} action="?/reset" form={data.resetForm} schema={resetReq} let:config let:message options={{ 
+<Form {debug} action="/auth?/reset" form={data.resetForm} schema={resetReq} let:config let:message options={{ 
    onResult: () => { token = '' }, 
    timeoutMs: 8000, multipleSubmits: 'prevent'
 }}>

@@ -5,7 +5,7 @@
    export let token: string = ''
    let debug: boolean = false
 </script>
-<Form {debug} action="?/forgot" form={data.forgotForm} schema={forgotReq} let:config let:message options={{ 
+<Form {debug} action="/auth?/forgot" form={data.forgotForm} schema={forgotReq} let:config let:message options={{ 
    onResult: () => { token = '' }, 
    timeoutMs: 8000, multipleSubmits: 'prevent'
 }}>
