@@ -39,7 +39,7 @@ export const actions: Actions = {
       if (!result) {
          return message(form, 'The service is unavailable.', { status: 424 })
       } else if (result && result.id) {
-   		return { form }
+   		return message(form, 'success') // the form will redirect to rurl
       } else if (result && result.errorCode === 'NOT_VERIFIED_ERROR') {
          return message(form, 'Please verify your email address before signing in.', { status: 401 })
       } else {
@@ -59,8 +59,8 @@ export const actions: Actions = {
       })
       if (!result) {
          return message(form, 'The service is unavailable.', { status: 424 })
-      } else if (result && result.id) {
-         return { form }
+      } else if (result && result.success) {
+         return message(form, `Your account has been created. An email has been sent to ${form.data.email}.  To continue, please click the link in the email to verify your address.`)
       } else {
          return message(form, 'Something went wrong', { status: 500 })
       }

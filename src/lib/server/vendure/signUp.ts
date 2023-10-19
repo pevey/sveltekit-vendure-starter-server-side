@@ -20,7 +20,6 @@ export const signUp = async function(locals: any, cookies: Cookies, input: Regis
    `)
    const response = await query({ document: SignUp, variables: { input }, locals })
    if (!response) return null
-console.log(response)
 
    if (!VENDURE_REQUIRE_VERIFICATION) {
       // Capture the credentials
