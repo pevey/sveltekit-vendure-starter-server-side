@@ -1,21 +1,16 @@
+import type { SearchInput } from '$lib/generated/graphql'
 import { gql } from '$lib/generated'
-import { query } from '.'
+import { query } from './'
 
-export const searchProducts = async function(slug: string) {
-   if (!slug) return []
-   const GetCollectionProducts = gql(`
-      query GetCollectionProducts($slug: String!, $skip: Int, $take: Int) {
-         search(
-         input: {
-            collectionSlug: $slug,
-            groupByProduct: true,
-            skip: $skip,
-            take: $take }
-         ) {
+export const searchProducts = async function(input: SearchInput) {
+   const SearchProducts = gql(`
+      query SearchProducts($input: SearchInput!) {
+         search(input: $input) {
             totalItems
             items {
                productName
                slug
+               description
                productAsset {
                   id
                   preview
@@ -34,8 +29,9 @@ export const searchProducts = async function(slug: string) {
          }
       }
    `)
-   return await query({ document: GetCollectionProducts , variables: { slug } })
+   return await query({ document: SearchProducts , variables: { input } })
    .then((response) => response?.json())
+   // .then((body) => { console.log(body?.data?.search?.items); return body?.data?.search?.items })
    .then((body) => body?.data?.search?.items)
    .catch(() => { return null })
 }

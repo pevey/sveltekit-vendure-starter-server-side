@@ -5,9 +5,7 @@ import { fail } from '@sveltejs/kit'
 
 export const load: PageServerLoad = async function ({ url }) {
    const q = url.searchParams?.get('q')
-   // let hits = q? await medusa.getSearchResults(q) : null
-   const hits = q? [{id: '1', title: 'test'}] : null
-
+   const hits = q? await searchProducts({ term: q, take: 10, skip: 0, groupByProduct: true }): null
    return { 
       hits
    }
@@ -18,13 +16,9 @@ export const actions: Actions = {
       const data = await request.formData()
       const q = data.get('q') as string
       if (!q) { return fail(400, { q, missing: true }) }
-      // const hits = await medusa.getSearchResults(q)
-console.log('search', q)
-const hits = [{id: '1', title: 'test'}]
-
       return { 
          success: true, 
-         hits 
+         hits: await searchProducts({ term: q, take: 10, skip: 0, groupByProduct: true })
       }
    }
 }

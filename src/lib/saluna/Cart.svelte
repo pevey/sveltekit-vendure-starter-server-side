@@ -5,7 +5,8 @@
    import { fade, fly } from 'svelte/transition'
    import { enhance } from '$app/forms'
    import { invalidateAll } from '$app/navigation'
-   import { formatPrice } from '$lib/utils'
+   import { PUBLIC_DEFAULT_CURRENCY } from '$env/static/public'
+   import { formatCurrency } from '$lib/saluna/utils'
    import VendureAsset from '$lib/saluna/VendureAsset.svelte'
 
    export let cart: Order|null
@@ -83,7 +84,7 @@
                                  <p class="mt-1 text-sm text-gray-500">Facet Values will go here</p>
                               </a>
                               <div>
-                                 <p class="ml-4 text-sm font-medium text-gray-900">{formatPrice(line.unitPrice)}</p>
+                                 <p class="ml-4 text-sm font-medium text-gray-900">{formatCurrency(line.unitPrice, PUBLIC_DEFAULT_CURRENCY)}</p>
                                  <p class="ml-4 text-sm text-gray-900 text-right">Qty: {line.quantity}</p>
                               </div>
                            </div>
@@ -129,7 +130,7 @@
                      <dl class="space-y-4">
                         <div class="flex items-center justify-between">
                            <dt class="ml-2 text-base font-medium text-gray-900">Subtotal</dt>
-                           <dd class="ml-4 mr-2 text-base font-medium text-gray-900">{formatPrice(total)}</dd>
+                           <dd class="ml-4 mr-2 text-base font-medium text-gray-900">{formatCurrency(total, PUBLIC_DEFAULT_CURRENCY)}</dd>
                         </div>
                      </dl>
                      <p class="ml-2 mt-1 text-sm text-gray-500">Shipping and taxes will be calculated at checkout.</p>

@@ -30,3 +30,11 @@ export const resetReq = z.object({
    password: z.string().min(6),
    token: z.string().min(1)
 })
+
+export const addReviewReq = z.object({
+   token: z.string().min(1),
+   productId: z.string().min(1),
+   displayName: z.string().min(1).max(100),
+   content: z.string().min(1).max(1000),
+   rating: z.coerce.number().min(1).max(5).default(5)
+})

@@ -1,13 +1,13 @@
 <script lang="ts">
    import type { PageData } from './$types'
-   import type { Product } from '$lib/generated/graphql'
-   import SEO from '$lib/saluna/SEO.svelte'
-   import { JsonLd } from 'svelte-meta-tags'
+   import type { Customer, Product } from '$lib/generated/graphql'
    import { queryParam } from 'sveltekit-search-params'
    import { page } from '$app/stores'
    import { enhance } from '$app/forms'  
    import { invalidateAll } from '$app/navigation'
-   import { formatPrice, findVariant, findSelectedOptions } from '$lib/utils'
+   import { PUBLIC_DEFAULT_CURRENCY } from '$env/static/public'
+   import { formatCurrency } from '$lib/saluna/utils'
+   import SEO from '$lib/saluna/SEO.svelte'
    import Rating from '$lib/saluna/Rating.svelte'
    import Reviews from '$lib/saluna/Reviews.svelte'
    import FAQ from '$lib/saluna/FAQ.svelte'
@@ -15,18 +15,15 @@
    import Highlights from '$lib/saluna/Highlights.svelte'
    export let data: PageData
    $: product = data.product as Product
-   $: user = data.user as any
-   // let reviewForm = data.reviewForm
+   $: user = data.user as Customer
+   let reviewForm = data.reviewForm
    // let reviews = product.reviews as any
+   let reviews: any = []
    // let images = product.images as any
    let tab: string = 'reviews'
-// console.log(data.product)
-   // @ts-ignore
    let selectedVariantId: string = data?.product?.variants[0]?.id
 </script>
-
-
-
+<!-- <SEO title={product.name} description={product.description} image={product.assets[0]?.url} /> -->
 <div class="max-w-screen-2xl mx-auto py-6 px-6 sm:px-12 md:px-14 lg:grid lg:grid-cols-2 lg:gap-x-6">
    <div class="lg:max-w-lg">
       <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">{product.name}</h1>
@@ -71,7 +68,7 @@
       <div class="mt-6">
          <h3 class="text-sm font-medium">Price</h3>
          <div class="mt-1 flex items-baseline">
-            <p class="text-xl font-semibold">{formatPrice(product.variants[product.variants.findIndex(v => v.id === selectedVariantId)].price)}</p>
+            <p class="text-xl font-semibold">{formatCurrency(product.variants[product.variants.findIndex(v => v.id === selectedVariantId)].price, PUBLIC_DEFAULT_CURRENCY)}</p>
             <p class="ml-1 text-sm font-medium text-gray-600">/ {product.variants[product.variants.findIndex(v => v.id === selectedVariantId)].name}</p>
          </div>
       </div> 
@@ -103,7 +100,7 @@
          </button>
       </div>
       {#if tab == 'reviews'}
-         <!-- <Reviews bind:reviewForm={reviewForm} {product} {user} {reviews} /> -->
+         <Reviews bind:reviewForm={reviewForm} {product} {user} {reviews} />
       {:else if tab == 'faq'}
          <FAQ/>
       {/if}
