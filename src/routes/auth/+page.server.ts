@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit'
 import { message, superValidate } from 'sveltekit-superforms/server'
 import { validateToken } from 'sveltekit-turnstile'
 import { SECRET_TURNSTILE_KEY } from '$env/static/private'
-import { signInReq, signUpReq, forgotReq, resetReq } from './validators'
+import { signInReq, signUpReq, forgotReq, resetReq } from '$lib/saluna/validators'
 import { signIn, signOut, signUp, resetPassword, requestPasswordReset } from '$lib/server/vendure'
 
 export const load: PageServerLoad = async ({ locals, url }) => {

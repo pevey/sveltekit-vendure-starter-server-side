@@ -6,7 +6,7 @@
    import { enhance } from '$app/forms'
    import { invalidateAll } from '$app/navigation'
    import { formatPrice } from '$lib/utils'
-   import VendureAsset from '$lib/components/VendureAsset.svelte'
+   import VendureAsset from '$lib/saluna/VendureAsset.svelte'
 
    export let cart: Order|null
    export let count: number

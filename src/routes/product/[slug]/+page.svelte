@@ -1,18 +1,18 @@
 <script lang="ts">
    import type { PageData } from './$types'
    import type { Product } from '$lib/generated/graphql'
-   import SEO from '$lib/components/SEO.svelte'
+   import SEO from '$lib/saluna/SEO.svelte'
    import { JsonLd } from 'svelte-meta-tags'
    import { queryParam } from 'sveltekit-search-params'
    import { page } from '$app/stores'
    import { enhance } from '$app/forms'  
    import { invalidateAll } from '$app/navigation'
    import { formatPrice, findVariant, findSelectedOptions } from '$lib/utils'
-   import Rating from './Rating.svelte'
-   import Reviews from './Reviews.svelte'
-   import FAQ from './FAQ.svelte'
-   import Gallery from './Gallery.svelte'
-   import Highlights from './Highlights.svelte'
+   import Rating from '$lib/saluna/Rating.svelte'
+   import Reviews from '$lib/saluna/Reviews.svelte'
+   import FAQ from '$lib/saluna/FAQ.svelte'
+   import Gallery from '$lib/saluna/Gallery.svelte'
+   import Highlights from '$lib/saluna/Highlights.svelte'
    export let data: PageData
    $: product = data.product as Product
    $: user = data.user as any

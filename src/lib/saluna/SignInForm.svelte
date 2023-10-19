@@ -1,12 +1,11 @@
 <script lang="ts">
-   import type { PageData } from './$types'
-   import { Form, Field, Label, Input, Validation, HiddenInput } from '$lib/formsnap'
-   import { signInReq } from './validators'
-   import ShowHideIcon from './ShowHideIcon.svelte'
-   import AppleButton from './AppleButton.svelte'
+   import { Form, Field, Label, Input, Validation, HiddenInput } from '$lib/saluna/formsnap'
+   import { signInReq } from '$lib/saluna/validators'
+   import ShowHideIcon from '$lib/saluna/ShowHideIcon.svelte'
+   import AppleButton from '$lib/saluna/AppleButton.svelte'
    import { createEventDispatcher } from 'svelte'
    const dispatch = createEventDispatcher()
-   export let data: PageData
+   export let data: any // PageData
    export let token: string = ''
    let debug: boolean = false
    let reveal: boolean = false

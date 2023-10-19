@@ -1,5 +1,5 @@
 <script lang="ts">
-   import SocialLinks from './SocialLinks.svelte'
+   import SocialLinks from '$lib/saluna/SocialLinks.svelte'
    let year = new Date().getFullYear()
 </script>
 <footer class="bg-white">

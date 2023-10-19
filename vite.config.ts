@@ -5,12 +5,9 @@ export default defineConfig({
 	plugins: [sveltekit()],
    // server: {
    //    host: 'localhost',
-   //    port: 8080
+   //    port: 5173
    // },
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
-	},
-   optimizeDeps: {
-      exclude: ['@urql/svelte'],
-    }
+	}
 })

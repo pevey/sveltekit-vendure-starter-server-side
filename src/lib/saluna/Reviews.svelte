@@ -1,5 +1,5 @@
 <script lang="ts">
-   import Rating from './Rating.svelte'
+   import Rating from '$lib/saluna/Rating.svelte'
    import { Turnstile } from 'sveltekit-turnstile'
    import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public'
    import { superForm } from 'sveltekit-superforms/client'

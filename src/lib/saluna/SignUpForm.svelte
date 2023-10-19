@@ -1,10 +1,9 @@
 <script lang="ts">
-   import type { PageData } from './$types'
-   import { Form, Field, Label, Input, Validation, HiddenInput } from '$lib/formsnap'
-   import { signUpReq } from './validators'
-   import ShowHideIcon from './ShowHideIcon.svelte'
-   import AppleButton from './AppleButton.svelte'
-   export let data: PageData
+   import { Form, Field, Label, Input, Validation, HiddenInput } from '$lib/saluna/formsnap'
+   import { signUpReq } from '$lib/saluna/validators'
+   import ShowHideIcon from '$lib/saluna/ShowHideIcon.svelte'
+   import AppleButton from '$lib/saluna/AppleButton.svelte'
+   export let data: any // PageData
    export let token: string = ''
    let debug: boolean = false
    let reveal: boolean = false

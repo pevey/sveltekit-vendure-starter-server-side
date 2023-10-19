@@ -1,7 +1,7 @@
 <script lang="ts">
-   import VendureAsset from '$lib/components/VendureAsset.svelte'
+   import VendureAsset from '$lib/saluna/VendureAsset.svelte'
    export let images: any = []
-   let selectedImage = images[0]?.preview || '/img/noimg.png'
+   let selectedImage = images[0]?.preview || '$lib/saluna/img/noimg.png'
    // should probably remove the function below
    function selectImage(index: number) {
       selectedImage = images[index].preview

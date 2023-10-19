@@ -4,11 +4,11 @@
    import { page } from '$app/stores'
    import { Turnstile } from 'sveltekit-turnstile'
    import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public'
-   import AuthContainer from './AuthContainer.svelte'
-   import SignInForm from './SignInForm.svelte'
-   import SignUpForm from './SignUpForm.svelte'
-   import ForgotForm from './ForgotForm.svelte'
-   import ResetForm from './ResetForm.svelte'
+   import AuthContainer from '$lib/saluna/AuthContainer.svelte'
+   import SignInForm from '$lib/saluna/SignInForm.svelte'
+   import SignUpForm from '$lib/saluna/SignUpForm.svelte'
+   import ForgotForm from '$lib/saluna/ForgotForm.svelte'
+   import ResetForm from '$lib/saluna/ResetForm.svelte'
 
    export let data: PageData
 
