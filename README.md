@@ -4,6 +4,13 @@
 
 If you are not familiar with Vendure, you can learn more on [the project web site](https://www.vendure.io/).  Vendure is an open-source, MIT-licensed, Node.js-based ecommerce backend with tons of flexibility.  You can use it to power practically any ecommerce application you could think of.
 
+## WORK IN PROGRESS
+
+This project is under active development.  Breaking changes will frequently occur.
+
+- Project web site will be here:https://saluna.com (not live)
+- CLI to create a new project using this starter app will be here: https://github.com/pevey/create-saluna
+
 ## Creating a project
 
 ```bash
