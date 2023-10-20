@@ -16,10 +16,10 @@ export const requestPasswordReset = async function(emailAddress: string) {
       }
    `)
    return await query({ document: RequestPasswordReset, variables: { emailAddress } })
-   .then((response) => response?.json())
-   .then((body) => body?.data?.requestPasswordReset)
-   .catch((e: Error) => {
-      console.log(e)
-      return null
-   })
+      .then((response) => response?.json())
+      .then((body) => body?.data?.requestPasswordReset)
+      .catch((e: Error) => {
+         console.log(e)
+         return null
+      })
 }

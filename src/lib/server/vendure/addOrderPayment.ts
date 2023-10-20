@@ -1,12 +1,16 @@
-import type { Cookies } from '@sveltejs/kit'
 import { gql } from '$lib/generated'
-import { query } from './'
+import { query } from '.'
+import type { PaymentInput } from '$lib/generated/graphql'
 
-export const getCart = async function(locals: App.Locals, cookies: Cookies) {
-   const GetCart = gql(`
-      query GetActiveOrder {
-         activeOrder {
+export const addOrderPayment = async function(input: PaymentInput) {
+   const AddOrderPayment = gql(`
+      mutation AddOrderPayment($input: PaymentInput!) {
+         addPaymentToOrder(input: $input) {
             ...ActiveOrder
+            ...on ErrorResult {
+               errorCode
+               message
+            }
          }
       }
       fragment ActiveOrder on Order {
@@ -59,7 +63,7 @@ export const getCart = async function(locals: App.Locals, cookies: Cookies) {
          }
       }
    `)
-   return await query({ document: GetCart, locals })
+   return await query({ document: AddOrderPayment, variables: { input } })
       .then((response) => response?.json())
       .then((body) => body?.data?.activeOrder)
       .catch(() => { return null })

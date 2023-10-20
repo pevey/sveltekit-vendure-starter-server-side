@@ -1,9 +1,9 @@
 import type { Cookies } from '@sveltejs/kit'
 import { gql } from '$lib/generated'
-import { query, parseAuthCookie } from './'
+import { query, parseAuthCookie } from '.'
 
-export const updateCart = async function(locals: any, cookies: Cookies, orderLineId: string, quantity: number) {
-   const UpdateCart = gql(`
+export const updateCartLine = async function(locals: any, cookies: Cookies, orderLineId: string, quantity: number) {
+   const UpdateCartLine = gql(`
       mutation AdjustOrderLine($orderLineId: ID!, $quantity: Int!) {
          adjustOrderLine(orderLineId: $orderLineId, quantity: $quantity) {
             ...ActiveOrder
@@ -14,16 +14,16 @@ export const updateCart = async function(locals: any, cookies: Cookies, orderLin
          }
       }
    `)
-   const response = await query({ document: UpdateCart, variables: { orderLineId, quantity }, locals })
+   const response = await query({ document: UpdateCartLine, variables: { orderLineId, quantity }, locals })
    if (!response) return null
 
    // Capture the credentials
    await parseAuthCookie(response.headers.getSetCookie(), locals, cookies)
 
    return await response.json()
-   .then((body:any) => body?.data?.adjustOrderLine)
-   .catch((e: Error) => {
-      console.log(e)
-      return null
-   })
+      .then((body:any) => body?.data?.adjustOrderLine)
+      .catch((e: Error) => {
+         console.log(e)
+         return null
+      })
 }

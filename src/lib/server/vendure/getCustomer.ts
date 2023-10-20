@@ -14,7 +14,7 @@ export const getCustomer = async function(locals: App.Locals) {
       }
    `)
    return await query({ document: GetCustomer, locals })
-   .then((response) => response?.json())
-   .then((body) => body?.data?.activeCustomer)
-   .catch(() => { return null })
+      .then((response) => response?.json())
+      .then((body) => body?.data?.activeCustomer)
+      .catch(() => { return null })
 }

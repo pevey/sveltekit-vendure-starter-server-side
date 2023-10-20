@@ -17,10 +17,10 @@ export const resetPassword = async function(token: string, password: string) {
       }
    `)
    return await query({ document: ResetPassword, variables: { token, password } })
-   .then((response) => response?.json())
-   .then((body) => body?.data?.resetPassword)
-   .catch((e: Error) => {
-      console.log(e)
-      return null
-   })
+      .then((response) => response?.json())
+      .then((body) => body?.data?.resetPassword)
+      .catch((e: Error) => {
+         console.log(e)
+         return null
+      })
 }

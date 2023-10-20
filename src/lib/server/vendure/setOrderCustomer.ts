@@ -1,12 +1,16 @@
-import type { Cookies } from '@sveltejs/kit'
 import { gql } from '$lib/generated'
 import { query } from './'
+import type { CreateCustomerInput } from '$lib/generated/graphql'
 
-export const getCart = async function(locals: App.Locals, cookies: Cookies) {
-   const GetCart = gql(`
-      query GetActiveOrder {
-         activeOrder {
+export const setOrderCustomer = async function(input: CreateCustomerInput) {
+   const SetOrderCustomer = gql(`
+      mutation SetCustomerForOrder($input: CreateCustomerInput!) {
+         setCustomerForOrder(input: $input) {
             ...ActiveOrder
+            ...on ErrorResult {
+               errorCode
+               message
+            }
          }
       }
       fragment ActiveOrder on Order {
@@ -59,7 +63,7 @@ export const getCart = async function(locals: App.Locals, cookies: Cookies) {
          }
       }
    `)
-   return await query({ document: GetCart, locals })
+   return await query({ document: SetOrderCustomer, variables: { input } })
       .then((response) => response?.json())
       .then((body) => body?.data?.activeOrder)
       .catch(() => { return null })

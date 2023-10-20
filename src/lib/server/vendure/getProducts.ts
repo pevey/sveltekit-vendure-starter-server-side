@@ -21,7 +21,7 @@ export const getProducts = async function(options?: ProductListOptions) {
       }
    `)
    return await query({ document: GetProducts, variables: { options } })
-   .then((response) => response?.json())
-   .then((body) => body?.data?.products?.items)
-   .catch(() => { return null })
+      .then((response) => response?.json())
+      .then((body) => body?.data?.products?.items)
+      .catch(() => { return null })
 }

@@ -1,11 +1,10 @@
-import type { Cookies } from '@sveltejs/kit'
 import { gql } from '$lib/generated'
 import { query } from './'
 
-export const getCart = async function(locals: App.Locals, cookies: Cookies) {
-   const GetCart = gql(`
-      query GetActiveOrder {
-         activeOrder {
+export const removeOrderCouponCode = async function(couponCode: string) {
+   const RemoveOrderCouponCode = gql(`
+      mutation RemoveOrderCouponCode($couponCode: String!) {
+         removeCouponCode(couponCode: $couponCode) {
             ...ActiveOrder
          }
       }
@@ -59,7 +58,7 @@ export const getCart = async function(locals: App.Locals, cookies: Cookies) {
          }
       }
    `)
-   return await query({ document: GetCart, locals })
+   return await query({ document: RemoveOrderCouponCode, variables: { couponCode } })
       .then((response) => response?.json())
       .then((body) => body?.data?.activeOrder)
       .catch(() => { return null })

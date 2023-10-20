@@ -27,9 +27,9 @@ export const signUp = async function(locals: any, cookies: Cookies, input: Regis
    }
 
    return await response.json()
-   .then((body:any) => body?.data?.registerCustomerAccount)
-   .catch((e: Error) => {
-      console.log(e)
-      return null
-   })
+      .then((body:any) => body?.data?.registerCustomerAccount)
+      .catch((e: Error) => {
+         console.log(e)
+         return null
+      })
 }

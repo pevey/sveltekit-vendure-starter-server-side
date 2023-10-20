@@ -1,7 +1,11 @@
 import type { Handle } from '@sveltejs/kit'
 import { handleVendureRequest } from '$lib/server/vendure'
+import { config } from '../saluna.config'
 
 export const handle: Handle = async ({ event, resolve }) => {
+
+   // STASH THE CONFIG IN LOCALS
+   event.locals.config = config
 
    // VENDURE SESSION MIDDLEWARE  
    // Sets locals.user and locals.cart if a vendure session is found.

@@ -18,7 +18,7 @@ export const getCollection = async function(slug: string) {
       }
    `)
    return await query({ document: GetCollection, variables: { slug } })
-   .then((response) => response?.json())
-   .then((body) => body?.data?.collection)
-   .catch(() => { return null })
+      .then((response) => response?.json())
+      .then((body) => body?.data?.collection)
+      .catch(() => { return null })
 }

@@ -24,9 +24,9 @@ export const signIn = async function(locals: any, cookies: Cookies, emailAddress
    await parseAuthCookie(response.headers.getSetCookie(), locals, cookies)
 
    return await response.json()
-   .then((body:any) => body?.data?.login)
-   .catch((e: Error) => {
-      console.log(e)
-      return null
-   })
+      .then((body:any) => body?.data?.login)
+      .catch((e: Error) => {
+         console.log(e)
+         return null
+      })
 }

@@ -15,10 +15,10 @@ export const signOut = async function(locals: App.Locals, cookies: Cookies) {
    locals.sid = ''
    locals.ssig = ''
    return await query({ document: SignOut, locals })
-   .then((response) => response?.json())
-   .then((body) => body?.data?.logout)
-   .catch((e: Error) => {
-      console.log(e)
-      return null
-   })
+      .then((response) => response?.json())
+      .then((body) => body?.data?.logout)
+      .catch((e: Error) => {
+         console.log(e)
+         return null
+      })
 }

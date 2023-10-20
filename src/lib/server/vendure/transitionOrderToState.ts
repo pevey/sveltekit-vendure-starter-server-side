@@ -1,12 +1,18 @@
-import type { Cookies } from '@sveltejs/kit'
 import { gql } from '$lib/generated'
-import { query } from './'
+import { query } from '.'
 
-export const getCart = async function(locals: App.Locals, cookies: Cookies) {
-   const GetCart = gql(`
-      query GetActiveOrder {
-         activeOrder {
+export const transitionOrderToState = async function(state: string) {
+   const TransitionOrderToState = gql(`
+      mutation TransitionToState($state: String!) {
+         transitionOrderToState(state: $state) {
             ...ActiveOrder
+            ...on OrderStateTransitionError {
+               errorCode
+               message
+               transitionError
+               fromState
+               toState
+            }
          }
       }
       fragment ActiveOrder on Order {
@@ -59,7 +65,7 @@ export const getCart = async function(locals: App.Locals, cookies: Cookies) {
          }
       }
    `)
-   return await query({ document: GetCart, locals })
+   return await query({ document: TransitionOrderToState, variables: { state } })
       .then((response) => response?.json())
       .then((body) => body?.data?.activeOrder)
       .catch(() => { return null })

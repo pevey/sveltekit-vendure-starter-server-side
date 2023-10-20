@@ -18,7 +18,7 @@ export const getTopLevelCollections = async function() {
       }
    `)
    return await query({ document: GetTopLevelCollections })
-   .then((response) => response?.json())
-   .then((body) => body?.data?.collections?.items)
-   .catch(() => { return null })
+      .then((response) => response?.json())
+      .then((body) => body?.data?.collections?.items)
+      .catch(() => { return null })
 }
