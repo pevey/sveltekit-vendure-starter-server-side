@@ -33,7 +33,6 @@ export const actions: Actions = {
 
    signIn: async ({ request, locals, cookies }) => {
       const form = await superValidate(request, signInReq, { id: 'signIn' })
-   console.log(form)
       if (!form.valid) return message(form, 'Something went wrong', { status: 500}) // this shouldn't happen because of client-side validation
       if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) return message(form, 'Bot defense', { status: 420 })
       const result = await signIn(locals, cookies, form.data.email.toLowerCase(), form.data.password)
