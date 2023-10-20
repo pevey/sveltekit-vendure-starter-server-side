@@ -1,6 +1,7 @@
 <script lang="ts">
    import type { SearchResult } from '$lib/generated/graphql'
    import SEO from '$lib/saluna/SEO.svelte'
+   import SearchHit from '$lib/saluna/SearchHit.svelte'
    import { enhance } from '$app/forms'
    import { queryParam } from 'sveltekit-search-params'
    const q = queryParam('q')
@@ -17,6 +18,11 @@
          }
       }
    }
+
+   const handleClick = function(e: any) {
+      $q = ''
+      window.location.href = `/product/${e.detail}`
+   }
 </script>
 <!-- <SEO title="Search" /> -->
 <div class="max-w-screen-2xl mx-auto my-8 px-6 md:px-8">
@@ -27,11 +33,8 @@
       <label for="q" class="sr-only">Search</label>
       <input type="search" name="q" id="q" bind:value={$q} on:input={() => searchForm.requestSubmit()} class="w-full block py-3 px-4 text-sm border border-gray-200 rounded-lg text-gray-700 placeholder-gray-400 focus:border-gray-500 focus:outline-none focus:ring-gray-500" aria-label="Search" />
    </form>
-   {#each hits as hit, i}
-      <button on:click={async () => { $q = '';  window.location.href = `/product/${hit.slug}` }} class="overflow-hidden text-left cursor-pointer hover:bg-stone-100 p-4">
-         <h3 class="font-bold">{hit.productName}</h3>
-         <p class="text-sm line-clamp-4">{hit.description}</p>
-      </button>
+   {#each hits as hit}
+      <SearchHit {hit} on:click={handleClick} />
    {:else}
       {#if $q}
          <p>No results found.</p>

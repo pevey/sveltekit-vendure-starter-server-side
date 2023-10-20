@@ -2,6 +2,7 @@
    import type { SearchResult } from '$lib/generated/graphql'
    import { enhance } from '$app/forms'
    import { clickOutsideAction } from 'svelte-legos'
+   import SearchHit from '$lib/saluna/SearchHit.svelte'
    
    let q: string = ''
    let hits: SearchResult[] = []
@@ -13,6 +14,11 @@
             hits = result.data.hits
          }
       }
+   }
+
+   const handleClick = function(e: any) {
+      q = ''
+      window.location.href = `/product/${e.detail}`
    }
 </script>
 <div class="relative hidden md:block w-full max-w-xl mx-auto">
@@ -30,12 +36,9 @@
    {#if q}
    <div use:clickOutsideAction on:clickoutside={() => q = ''} class="absolute overflow-auto max-h-[80vh] rounded-b-xl bg-white w-full z-50 border border-gray-200">
       {#each hits as hit}
-      <button on:click={async () => { q = '';  window.location.href = `/product/${hit.slug}` }} class="overflow-hidden text-left cursor-pointer hover:bg-stone-100 p-4">
-         <h3 class="font-bold">{hit.productName}</h3>
-         <p class="text-sm line-clamp-4">{hit.description}</p>
-      </button>
+         <SearchHit {hit} on:click={handleClick} />
       {:else}
-      <p>No results found.</p>
+         <p>No results found.</p>
       {/each}
    </div>
    {/if}
