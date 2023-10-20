@@ -20,7 +20,7 @@ const config = {
       // csp: {
 		// 	directives: {
 		// 		'script-src': ['self', 'https://laroastingco.com/', 'https://challenges.cloudflare.com/', 'https://js.stripe.com/'],
-		// 		'img-src': ['self', 'https://laroastingco.com/', 'data:', process.env.PUBLIC_IMAGE_BASE_URL, 'https://challenges.cloudflare.com/', 'https://js.stripe.com/'],
+		// 		'img-src': ['self', 'https://laroastingco.com/', 'data:', process.env.ORIGIN, 'https://challenges.cloudflare.com/', 'https://js.stripe.com/'],
 		// 	}
 		// }
    },
