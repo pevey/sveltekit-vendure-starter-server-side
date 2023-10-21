@@ -4,57 +4,27 @@
    import { enhance } from '$app/forms'
    import { Turnstile } from 'sveltekit-turnstile'
    import { Payment, Address, stripeClient, stripeElements } from 'sveltekit-stripe'
+   import VendureAsset from '$lib/saluna/VendureAsset.svelte'
    import { formatCurrency } from '$lib/saluna/utils'
    import SEO from '$lib/saluna/SEO.svelte'
-   import { PUBLIC_SITE_NAME } from '$env/static/public'
-   import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public'
-   import { PUBLIC_STRIPE_KEY } from '$env/static/public'
 
    export let data: PageData
    $: user = data.user as Customer
-   $: cart = data.cart as Order
-   $: lines = cart?.lines || []
-   
+   $: order = data.cart as Order
+   $: lines = order?.lines || []
+console.log(data.cart)
    let token: string
    let clientSecret: string
-   let shippingOptions: any[]
-   let shippingOptionId: string
+   let contacts: any[]
+   let paymentOptions: any[]
+
    let addressContainer: any
-   let order: any
-   
+   let addressOptions: any
    let orderSummaryOpen = false
    let success = false
    let processing = false
    let loading = true
    let errorMessage = ''
-   
-   let contacts = []
-   if (user.shipping_addresses) {
-      for (let address of user.shipping_addresses) {
-         contacts.push({
-            name: address.first_name + ' ' + address.last_name,
-            address: {
-               line1: address.address_1,
-               line2: address.address_2,
-               city: address.city,
-               state: address.province,
-               postal_code: address.postal_code,
-               country: address.country_code.toUpperCase(),
-            }
-         })
-      }
-   }
-   let addressOptions = {
-      contacts: contacts
-   }
-
-   const splitName = (name = '') => {
-      const [firstName, ...lastName] = name.split(' ').filter(Boolean)
-      return {
-         firstName: firstName,
-         lastName: lastName.join(' ')
-      }
-   }
 
    const toggleOrderSummary = () => {
       let orderSummary = document.getElementById('order-summary') as HTMLElement
@@ -67,96 +37,38 @@
       }
    }
 
-   const saveAddress = async (value) => {
-      let address = {
-         first_name: value.firstName,
-         last_name: value.lastName,
-         address_1: value.address.line1,
-         address_2: value.address.line2,
-         city: value.address.city,
-         province: value.address.state,
-         postal_code: value.address.postal_code,
-         country_code: value.address.country.toLowerCase(),
-      }
-      let newAddress = true
-      // if no first_name, this must be coming from stripe, so address is not new.  
-      // sometimes stripe sends full name despite setting cause who knows why
-      if (!address.first_name) {
-         newAddress = false
-         let { firstName, lastName } = splitName(value.name)
-         address.first_name = firstName
-         address.last_name = lastName
-      } else {
-         for (let existing of user.shipping_addresses) {
-            if (JSON.stringify(address) === JSON.stringify(existing)) {
-               newAddress = false
-            }
-         }
-      }
-      address.phone = value.phone // add after to not break the comparison above
-      if (newAddress) {
-         let success = await fetch('/checkout/save-address', { 
-            method: 'POST', 
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(address)
-         })
-         .then(res => res.ok)
-         .catch(() => false)
-         if (!success) return false
-      }
-      return await fetch('/checkout/shipping-address', { 
-         method: 'POST',
-         headers: {'Content-Type': 'application/json'},
-         body: JSON.stringify(address) })
-      .then(res => res.json())
-      .catch(() => false)
-   }
-
-   const saveShippingOption = async (id: string) => {
-      if (!shippingOptionId) return false
-      return await fetch('/checkout/shipping-option', { 
-         method: 'POST', 
-         body: JSON.stringify({ 'option_id': id }) 
-      }).then(res => res.json()).catch(() => false)
-   }
-
    const startCheckout = async (token: string) => {
       try {
-         let response = await fetch('/checkout/turnstile', { 
+         let result = await fetch('/checkout/turnstile', { 
             method: 'POST', 
             body: JSON.stringify({ token } )
          }).then(res => res.json())
-         cart = response.cart
-         clientSecret = response.cart.payment_session.data.client_secret
-         shippingOptions = response.shippingOptions
-         for (let shippingOption of shippingOptions) {
-            if (shippingOption.name === 'Free Shipping') {
-               shippingOptionId = shippingOption.id
-               cart = await saveShippingOption(shippingOptionId)
-               break
-            }
-         }
-         if (!shippingOptionId) {
-            shippingOptionId = shippingOptions[0].id
-            cart = await saveShippingOption(shippingOptionId)
-         }
+   console.log(result)
+         clientSecret = result.paymentIntent
+         paymentOptions = result.paymentOptions
+         contacts = result.contacts
+         addressOptions = { contacts }
+         // shippingOptions = response.shippingOptions
+         // for (let shippingOption of shippingOptions) {
+         //    if (shippingOption.name === 'Free Shipping') {
+         //       shippingOptionId = shippingOption.id
+         //       cart = await saveShippingOption(shippingOptionId)
+         //       break
+         //    }
+         // }
+         // if (!shippingOptionId) {
+         //    shippingOptionId = shippingOptions[0].id
+         //    cart = await saveShippingOption(shippingOptionId)
+         // }
          loading = false
       } catch (err) {
          console.log(err)
       }
    }
 
-   // const savePaymentMethod = async (id) => {
-   // 	let form = new FormData()
-   // 	form.append('payment_method_id', id)
-   // 	return await fetch('/checkout/payment-method', { method: 'POST', body: form })
-   // 	.then(res => res.json())
-   // 	.catch(() => false)
-   // }
-
 </script>
 
-<!-- <SEO title="Checkout" description="Checkout page for {PUBLIC_SITE_NAME}"/> -->
+<!-- <SEO title="Checkout" description="Checkout page for {data.siteName}"/> -->
 
 <noscript>
    <p>Please enable javascript to complete checkout.</p>
@@ -172,21 +84,21 @@
          <div class="mx-auto max-w-lg">
             <!-- Logo on thank you screen -->
             <div class="py-10 lg:flex">
-               <span class="sr-only">{PUBLIC_SITE_NAME}</span>
-               <a href="/"><img src="/logo.png" alt="{PUBLIC_SITE_NAME}" class="h-14 w-auto"></a>
+               <span class="sr-only">{data.siteName}</span>
+               <a href="/"><img src="/logo.png" alt="{data.siteName}" class="h-14 w-auto"></a>
             </div>
             <p>Thank you for your order!</p>
-            <p>Your order number is <a class="font-bold text-lime-600" href={`/account/order/${order.id}`}>{order.display_id}</a></p>
+            <p>Your order number is <a class="font-bold text-lime-600" href={`/account/order/${order.id}`}>{order.code}</a></p>
             <p class="mt-6"><a href="/">&larr; Continue Shopping</a></p>
          </div>
       </section>
    </main>
 
-{:else if (!cart?.lines)}
+{:else if (!order?.lines)}
    <p>Your cart is empty.</p>
 
 {:else if !token}
-   <Turnstile theme="light" siteKey={PUBLIC_TURNSTILE_SITE_KEY} on:turnstile-callback={ async (e) => { 
+   <Turnstile theme="light" siteKey={data.turnstileKey} on:turnstile-callback={ async (e) => { 
       token = e.detail.token
       await startCheckout(token)
    }} />
@@ -198,8 +110,8 @@
       <!-- Logo on sm screen -->
       <div class="px-4 py-6 sm:px-6 lg:hidden">
          <div class="mx-auto flex max-w-lg">
-            <span class="sr-only">{PUBLIC_SITE_NAME}</span>
-            <a href="/"><img src="/logo.png" class="mx-auto h-14 w-auto" alt="{PUBLIC_SITE_NAME}" /></a>
+            <span class="sr-only">{data.siteName}</span>
+            <a href="/"><img src="/logo.png" class="mx-auto h-14 w-auto" alt="{data.siteName}" /></a>
          </div>
       </div>
       
@@ -218,15 +130,16 @@
       
             <div id="order-summary" class="hidden lg:block lg:max-h-screen">
                <ul role="list" class="flex-auto">
-                  {#each items as item}
+                  {#each lines as line}
                   <li class="flex space-x-6 py-6 border-b border-gray-200">
-                     <img src="{item.thumbnail}" alt="item.description" class="h-28 w-auto flex-none rounded-md bg-gray-200 object-cover object-center">
+                     <VendureAsset preview={line.featuredAsset?.preview} alt={line.productVariant.name} preset="thumb" class="h-28 w-auto flex-none rounded-md bg-gray-200 object-cover object-center" />
+                     <!-- <img src="{item.thumbnail}" alt="item.description" class="h-28 w-auto flex-none rounded-md bg-gray-200 object-cover object-center"> -->
                      <div class="flex flex-col justify-between space-y-4 my-auto">
                         <div class="space-y-1 text-sm font-medium">
-                           <h3 class="text-gray-900">{item.title}</h3>
-                           <p class="text-gray-900">{item.description}</p>
-                           <p class="text-gray-500">Price: {formatPrice(item.unit_price)}</p>
-                           <p class="text-gray-500">Quantity: {item.quantity}</p>
+                           <h3 class="text-gray-900">{line.productVariant.name}</h3>
+                           <p class="text-gray-900">facets</p>
+                           <p class="text-gray-500">Price: {formatCurrency(line.unitPrice, data.defaultCurrency)}</p>
+                           <p class="text-gray-500">Quantity: {line.quantity}</p>
                         </div>
                      </div>
                   </li>
@@ -244,30 +157,40 @@
                <dl class="py-6 space-y-6 text-sm font-medium text-gray-500">
                   <div class="flex justify-between">
                      <dt>Subtotal</dt>
-                     <dd class="text-gray-900">{formatPrice(cart?.subtotal)}</dd>
+                     <dd class="text-gray-900">{formatCurrency(order?.subTotal, data.defaultCurrency)}</dd>
                   </div>
-                  {#if cart?.discount_total}
-                  <div class="flex justify-between">
-                     <dt class="flex">
-                        Discount
-                        <span class="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs tracking-wide text-gray-600">{cart.discounts[0]}</span>
-                     </dt>
-                     <dd class="text-gray-900">{formatPrice(cart.discount_total)}</dd>
-                  </div>
+                  {#if order.discounts.length > 0}
+                     {#each order?.discounts as discount}
+                        <div class="flex justify-between">
+                           <dt class="flex">
+                              Discount
+                              <span class="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs tracking-wide text-gray-600">{discount.description}</span>
+                           </dt>
+                           <dd class="text-gray-900">{formatCurrency(discount.amountWithTax, data.defaultCurrency)}</dd>
+                        </div>
+                     {/each}
                   {/if}
-                  <div class="flex justify-between">
+                  {#if order.taxSummary.length > 0}
+                     {#each order.taxSummary as tax}
+                        <div class="flex justify-between">
+                           <dt>{tax.description}</dt>
+                           <dd class="text-gray-900">{formatCurrency(tax.taxTotal, data.defaultCurrency)}</dd>
+                        </div>
+                     {/each}
+                  {/if}
+                  <!-- <div class="flex justify-between">
                      <dt>Taxes</dt>
-                     <dd class="text-gray-900">{formatPrice(cart?.tax_total)}</dd>
-                  </div>
+                     <dd class="text-gray-900">{formatCurrency(order?.taxSummary[0]?.taxTotal, data.defaultCurrency)}</dd>
+                  </div> -->
                   <div class="flex justify-between">
                      <dt>Shipping</dt>
-                     <dd class="text-gray-900">{formatPrice(cart?.shipping_methods[0]?.price)}</dd>
+                     <dd class="text-gray-900">shipping</dd>
                   </div>
                </dl>
                
                <p class="py-6 flex items-center justify-between border-t border-gray-200 text-sm font-medium text-gray-900">
                   <span class="text-base">Total</span>
-                  <span class="text-base">{formatPrice(cart?.total)}</span>
+                  <span class="text-base">{formatCurrency(order?.total, data.defaultCurrency)}</span>
                </p>
 
             </div>
@@ -280,8 +203,8 @@
 
             <!-- Logo on lg screen -->
             <div class="hidden py-10 lg:flex">
-               <span class="sr-only">{PUBLIC_SITE_NAME}</span>
-               <a href="/"><img src="/logo.png" alt="{PUBLIC_SITE_NAME}" class="h-14 w-auto"></a>
+               <span class="sr-only">{data.siteName}</span>
+               <a href="/"><img src="/logo.png" alt="{data.siteName}" class="h-14 w-auto"></a>
             </div>
 
             <form class="grid gap-y-8" method="POST" use:enhance={ async ({ cancel }) => {
@@ -290,24 +213,24 @@
          
                // capture shipping address
                const {complete, value} = await addressContainer.getValue()
-               if (complete) {
-                  cart = await saveAddress(value)
-                  if (!cart) {
-                     errorMessage = 'Something went wrong while saving your address. Please call us at 318-226-2888.'
-                     console.log(errorMessage)
-                     processing = false
-                     cancel()
-                  }
-               }
+               // if (complete) {
+               //    cart = await saveAddress(value)
+               //    if (!cart) {
+               //       errorMessage = 'Something went wrong while saving your address. Please call us at 318-226-2888.'
+               //       console.log(errorMessage)
+               //       processing = false
+               //       cancel()
+               //    }
+               // }
       
                // capture final shipping method
-               cart = await saveShippingOption(shippingOptionId)
-               if (!cart) {
-                  errorMessage = 'Something went wrong while selecting the shipping option. Please call us at 318-226-2888.'
-                  console.log(errorMessage)
-                  processing = false
-                  cancel()
-               }
+               // order = await saveShippingOption(shippingOptionId)
+               // if (!order) {
+               //    errorMessage = 'Something went wrong while selecting the shipping option. Please call us at 318-226-2888.'
+               //    console.log(errorMessage)
+               //    processing = false
+               //    cancel()
+               // }
          
                // confirm payment
                const stripeResponse = await $stripeClient.confirmPayment({ elements: $stripeElements, redirect: 'if_required' })
@@ -325,15 +248,20 @@
                }
             }}>
 
-               <Address publicKey={PUBLIC_STRIPE_KEY} {addressOptions} {clientSecret} bind:addressContainer/>
+               <Address publicKey={data.stripeKey} {addressOptions} {clientSecret}
+                  on:complete={async (e) => {
+                     console.log(e.detail)
+                     // cart = await saveAddress(e.detail.value)
+                  }}
+               />
 
-               <select bind:value={shippingOptionId} on:change={async () => { cart = await saveShippingOption(shippingOptionId) } } name="shippingOptionId" required="required" class="block w-full rounded-md border-gray-200 shadow-sm focus:border-blue-300 focus:ring-blue-300 text-gray-600 py-3">
+               <!-- <select bind:value={shippingOptionId} on:change={async () => { cart = await saveShippingOption(shippingOptionId) } } name="shippingOptionId" required="required" class="block w-full rounded-md border-gray-200 shadow-sm focus:border-blue-300 focus:ring-blue-300 text-gray-600 py-3">
                   {#each shippingOptions as shippingOption}
                      <option value={shippingOption.id}>{shippingOption.name} {formatPrice(shippingOption.price_incl_tax)}</option>
                   {/each}
-               </select>
+               </select> -->
 
-               <Payment publicKey={PUBLIC_STRIPE_KEY} {clientSecret} />			
+               <Payment publicKey={data.stripeKey} {clientSecret} />			
          
                <button disabled={processing} type="submit" class="w-full items-center justify-center rounded-md border border-transparent bg-lime-600 px-5 py-3 text-base font-medium text-white hover:bg-lime-700">
                   {#if processing} Processing...{:else} Complete Your Order {/if}
@@ -350,4 +278,5 @@
          </div>
       </section>
    </main>
+
 {/if}

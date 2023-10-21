@@ -1,11 +1,14 @@
 import type { PageServerLoad, Actions } from './$types'
 import { fail, redirect } from '@sveltejs/kit'
-// import medusa from '$lib/server/medusa'
 
 export const load: PageServerLoad = async function ({ locals }) {
-   if (!locals.user) throw redirect(302, '/auth?rurl=checkout')
+   //if (!locals.user) throw redirect(302, '/auth?rurl=checkout')
+   if (!locals.cart) throw redirect(302, '/cart')
    return {
-      order: 'order'
+      defaultCurrency: locals.config.defaultCurrency,
+      siteName: locals.config.site.siteName,
+      turnstileKey: locals.config.turnstile.publicKey,
+      stripeKey: locals.config.stripe.publicKey,
    }
 }
 

@@ -1,7 +1,7 @@
 import { gql } from '$lib/generated'
 import { query } from './'
 
-export const getOrderShippingMethods = async function() {
+export const getOrderShippingMethods = async function(locals: App.Locals) {
    const GetOrderShippingMethods = gql(`
       query GetOrderShippingMethods {
          eligibleShippingMethods {
@@ -11,7 +11,7 @@ export const getOrderShippingMethods = async function() {
          }
       }
    `)
-   return await query({ document: GetOrderShippingMethods })
+   return await query({ document: GetOrderShippingMethods, locals })
       .then((response) => response?.json())
       .then((body) => body?.data?.eligibleShippingMethods)
       .catch(() => { return null })

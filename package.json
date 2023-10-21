@@ -35,7 +35,7 @@
       "svelte-legos": "^0.2.2",
       "svelte-meta-tags": "^3.0.4",
       "sveltekit-search-params": "^1.0.15",
-      "sveltekit-stripe": "^1.1.0",
+      "sveltekit-stripe": "^2.0.0",
       "sveltekit-superfetch": "^3.0.3",
       "sveltekit-superforms": "^1.8.0",
       "sveltekit-turnstile": "^1.2.0",

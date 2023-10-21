@@ -1,7 +1,7 @@
 import { gql } from '$lib/generated'
 import { query } from './'
 
-export const getCustomerAddresses = async function() {
+export const getCustomerAddresses = async function(locals: App.Locals) {
    const GetCustomerAddresses = gql(`
       query GetCustomerAddresses {
          activeCustomer {
@@ -26,7 +26,7 @@ export const getCustomerAddresses = async function() {
          }
       }
    `)
-   return await query({ document: GetCustomerAddresses })
+   return await query({ document: GetCustomerAddresses, locals })
       .then((response) => response?.json())
       .then((body) => body?.data?.activeCustomer?.addresses)
       .catch(() => { return null })

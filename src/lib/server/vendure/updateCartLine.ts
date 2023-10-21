@@ -2,7 +2,7 @@ import type { Cookies } from '@sveltejs/kit'
 import { gql } from '$lib/generated'
 import { query, parseAuthCookie } from '.'
 
-export const updateCartLine = async function(locals: any, cookies: Cookies, orderLineId: string, quantity: number) {
+export const updateCartLine = async function(locals: App.Locals, cookies: Cookies, orderLineId: string, quantity: number) {
    const UpdateCartLine = gql(`
       mutation AdjustOrderLine($orderLineId: ID!, $quantity: Int!) {
          adjustOrderLine(orderLineId: $orderLineId, quantity: $quantity) {

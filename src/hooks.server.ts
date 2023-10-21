@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit'
 import { handleVendureRequest } from '$lib/server/vendure'
-import { config } from '../saluna.config'
+import { config } from './saluna.config'
 
 export const handle: Handle = async ({ event, resolve }) => {
 

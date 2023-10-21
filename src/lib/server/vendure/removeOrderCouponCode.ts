@@ -1,7 +1,7 @@
 import { gql } from '$lib/generated'
 import { query } from './'
 
-export const removeOrderCouponCode = async function(couponCode: string) {
+export const removeOrderCouponCode = async function(locals: App.Locals, couponCode: string) {
    const RemoveOrderCouponCode = gql(`
       mutation RemoveOrderCouponCode($couponCode: String!) {
          removeCouponCode(couponCode: $couponCode) {
@@ -58,7 +58,7 @@ export const removeOrderCouponCode = async function(couponCode: string) {
          }
       }
    `)
-   return await query({ document: RemoveOrderCouponCode, variables: { couponCode } })
+   return await query({ document: RemoveOrderCouponCode, variables: { couponCode }, locals })
       .then((response) => response?.json())
       .then((body) => body?.data?.activeOrder)
       .catch(() => { return null })

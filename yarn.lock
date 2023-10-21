@@ -4032,10 +4032,10 @@ sveltekit-search-params@^1.0.15:
   resolved "https://registry.yarnpkg.com/sveltekit-search-params/-/sveltekit-search-params-1.0.15.tgz#38b42e8743250ea346a310742e91bd04c322eeaa"
   integrity sha512-LLuG961adpMMnyG/5Ixj9Cv++62ol7aSpVpE0qIFzQuOZ/5J3PwSoXu06pBw9DZi5Awj40OXtGLtpyh6WZjqVQ==
 
-sveltekit-stripe@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/sveltekit-stripe/-/sveltekit-stripe-1.1.0.tgz#ebd3c0105cafb1765946f18afc02fb19cf59d6a8"
-  integrity sha512-iqls1MjP2dcg2zuQAlg4Qsqz/U7tnm4qMGoqbsSeC7rYEAKtpd4dK0DRjepa9tI+MuMorAwPZ+hwmFfluicqDw==
+sveltekit-stripe@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/sveltekit-stripe/-/sveltekit-stripe-2.0.0.tgz#0926b959e40da88eda8cb5872fa24305dbfbb74b"
+  integrity sha512-c1LiJ4/9jNzHz21LHMUzQjZBEUl7XoOA/bMoT5Nq5/+Knrwk1VYitc9TIzzkRAT8yQRqFRf+Ww3FgfdoQ0dwNg==
   dependencies:
     "@stripe/stripe-js" "^1.52.1"
 

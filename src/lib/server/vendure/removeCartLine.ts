@@ -2,7 +2,7 @@ import type { Cookies } from '@sveltejs/kit'
 import { gql } from '$lib/generated'
 import { query, parseAuthCookie } from '.'
 
-export const removeCartLine = async function(locals: any, cookies: Cookies, orderLineId: string) {
+export const removeCartLine = async function(locals: App.Locals, cookies: Cookies, orderLineId: string) {
    const RemoveCartLine = gql(`
       mutation RemoveItemFromOrder($orderLineId: ID!) {
          removeOrderLine(orderLineId: $orderLineId) {

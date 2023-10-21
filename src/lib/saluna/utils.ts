@@ -7,6 +7,7 @@ export const formatCurrency = function(value: number, currencyCode: string, loca
        return new Intl.NumberFormat(locale, {
            style: 'currency',
            currency: currencyCode,
+           currencyDisplay: 'symbol'
        }).format(majorUnits)
    } catch (e: any) {
        // A fallback in case the NumberFormat fails for any reason
