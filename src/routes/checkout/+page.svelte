@@ -1,6 +1,7 @@
 <script lang="ts">
    import type { PageData } from './$types'
    import type { Customer, Order } from '$lib/generated/graphql'
+   import type { Appearance, Stripe, StripeAddressElementOptions , StripePaymentElementOptions } from 'sveltekit-stripe'
    import { enhance } from '$app/forms'
    import { Turnstile } from 'sveltekit-turnstile'
    import { Payment, Address, stripeClient, stripeElements } from 'sveltekit-stripe'
@@ -12,19 +13,18 @@
    $: user = data.user as Customer
    $: order = data.cart as Order
    $: lines = order?.lines || []
-console.log(data.cart)
+
    let token: string
    let clientSecret: string
    let contacts: any[]
    let paymentOptions: any[]
 
-   let addressContainer: any
-   let addressOptions: any
+   let addressElementOptions: StripeAddressElementOptions = { mode: 'shipping' }
    let orderSummaryOpen = false
    let success = false
    let processing = false
    let loading = true
-   let errorMessage = ''
+   let errorMessage: string|undefined
 
    const toggleOrderSummary = () => {
       let orderSummary = document.getElementById('order-summary') as HTMLElement
@@ -47,7 +47,7 @@ console.log(data.cart)
          clientSecret = result.paymentIntent
          paymentOptions = result.paymentOptions
          contacts = result.contacts
-         addressOptions = { contacts }
+         addressElementOptions.contacts = contacts
          // shippingOptions = response.shippingOptions
          // for (let shippingOption of shippingOptions) {
          //    if (shippingOption.name === 'Free Shipping') {
@@ -133,7 +133,6 @@ console.log(data.cart)
                   {#each lines as line}
                   <li class="flex space-x-6 py-6 border-b border-gray-200">
                      <VendureAsset preview={line.featuredAsset?.preview} alt={line.productVariant.name} preset="thumb" class="h-28 w-auto flex-none rounded-md bg-gray-200 object-cover object-center" />
-                     <!-- <img src="{item.thumbnail}" alt="item.description" class="h-28 w-auto flex-none rounded-md bg-gray-200 object-cover object-center"> -->
                      <div class="flex flex-col justify-between space-y-4 my-auto">
                         <div class="space-y-1 text-sm font-medium">
                            <h3 class="text-gray-900">{line.productVariant.name}</h3>
@@ -178,10 +177,6 @@ console.log(data.cart)
                         </div>
                      {/each}
                   {/if}
-                  <!-- <div class="flex justify-between">
-                     <dt>Taxes</dt>
-                     <dd class="text-gray-900">{formatCurrency(order?.taxSummary[0]?.taxTotal, data.defaultCurrency)}</dd>
-                  </div> -->
                   <div class="flex justify-between">
                      <dt>Shipping</dt>
                      <dd class="text-gray-900">shipping</dd>
@@ -212,7 +207,7 @@ console.log(data.cart)
                processing = true
          
                // capture shipping address
-               const {complete, value} = await addressContainer.getValue()
+               // const {complete, value} = await addressContainer.getValue()
                // if (complete) {
                //    cart = await saveAddress(value)
                //    if (!cart) {
@@ -233,8 +228,12 @@ console.log(data.cart)
                // }
          
                // confirm payment
-               const stripeResponse = await $stripeClient.confirmPayment({ elements: $stripeElements, redirect: 'if_required' })
-               if (stripeResponse.error) {
+               const stripeResponse = await $stripeClient?.confirmPayment({ 
+                  elements: $stripeElements, 
+                  clientSecret, 
+                  confirmParams: { return_url: 'https://example.com' }
+               })
+               if (stripeResponse?.error) {
                   errorMessage = stripeResponse.error.message
                   processing = false
                   cancel()
@@ -242,13 +241,13 @@ console.log(data.cart)
                   return async ({ result }) => {
                      if (result.status === 200) {
                         success = true
-                        order = result.data.order
+                        // order = result.data.order
                      } 
                   }
                }
             }}>
 
-               <Address publicKey={data.stripeKey} {addressOptions} {clientSecret}
+               <Address publicKey={data.stripeKey} {addressElementOptions} {clientSecret}
                   on:complete={async (e) => {
                      console.log(e.detail)
                      // cart = await saveAddress(e.detail.value)
