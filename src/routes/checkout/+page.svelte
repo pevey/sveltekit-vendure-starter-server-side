@@ -190,11 +190,16 @@
                <section id="email">
                   <div class="flex flex-auto justify-between items-center">
                      <h3 class="text-xl font-medium text-gray-900" id="payment-heading">Email</h3>
-                     <span>Have an account? Sign in</span>
+                     <span class="text-sm">
+                        {#if (!$customer)}
+                           Have an account? Sign in
+                        {:else}
+                           Sign in as a different customer
+                        {/if}
+                     </span>
                   </div>
                   {#if $customer}
                      <div>{$customer.emailAddress}</div>
-                     <div class="text-sm mt-1">Sign in as a different customer</div>
                   {:else}
                      <input name="emailAddress" bind:value={emailAddress} type="text" class="input mt-2">
                      <div class="mt-2 flex items-center">

@@ -1,9 +1,9 @@
 import type { PageServerLoad } from './$types'
-import { getOrderByCode } from '$lib/server/vendure'
 
-export const load: PageServerLoad = async function ({ locals, params }) {
+export const load: PageServerLoad = async function ({ params, url }) {
    const code = params.code
+   const status = url.searchParams.get('redirect_status')
    return {
-      order: (code)? await getOrderByCode(locals, code) : null
+      code
    }
 }

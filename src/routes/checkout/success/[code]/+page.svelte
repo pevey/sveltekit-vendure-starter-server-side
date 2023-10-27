@@ -1,10 +1,9 @@
 <script lang="ts">
-   export let data: any
-   const order = data.order
    import CheckoutSuccess from '$lib/saluna/CheckoutSuccess.svelte'
+   export let data: any
 </script>
-{#if order}
-   <CheckoutSuccess {order} />
+{#if data.code}
+   <CheckoutSuccess code={data.code} />
 {:else}
    <p>Order not found</p>
 {/if}
