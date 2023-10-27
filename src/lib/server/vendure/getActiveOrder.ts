@@ -53,6 +53,7 @@ export const getActiveOrder = async function(locals: App.Locals, cookies: Cookie
          }
          shippingLines {
             shippingMethod {
+               id
                name
                description
             }

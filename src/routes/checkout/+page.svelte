@@ -8,7 +8,7 @@
    import { enhance } from '$app/forms'
    import { writable } from 'svelte/store'
    import { setContext } from 'svelte'
-   import { dev } from '$app/environment'
+   import { browser, dev } from '$app/environment'
    import { formatCurrency } from '$lib/saluna/utils'
    import CheckoutOrderSummary from '$lib/saluna/CheckoutOrderSummary.svelte'
    import SEO from '$lib/saluna/SEO.svelte'
@@ -28,11 +28,13 @@
    let firstName: string
    let lastName: string
    let shippingOptions: ShippingMethodQuote[]
-   let shippingOptionId: number
+   let selectedShippingOption: number
    let paymentOptions: PaymentMethod[]
    let delivery: 'ship'|'pickup' = 'ship'
    let processing = false
    let errorMessage: string|undefined
+   
+   $: { if (browser && shippingOptions) setShippingOption(selectedShippingOption) }
 
    const startCheckout = async (token: string) => {
       const result = await fetch('/checkout/turnstile', { 
@@ -66,10 +68,37 @@
    }
 
    const setShippingOption = async (id: number) => {
-      return await fetch('/checkout/set-shipping-option', { 
+      $order = await fetch('/checkout/set-shipping-option', { 
          method: 'POST', 
          body: JSON.stringify({ id })
       }).then(res => res.json()).catch(e => { if (dev) console.log(e) })
+   }
+   
+   const selectCheapestShippingOption = async () => {
+      // set cheapest shipping option as default, but make sure it is not local pickup
+      if (shippingOptions) {
+         let index = 0
+         if (data.localPickupCode) {
+            let pickupIndex = +shippingOptions.findIndex(v => v.code === data.localPickupCode)
+            if (pickupIndex === index) index += 1
+         }
+         if (index === shippingOptions.length) {
+            errorMessage = 'There are no shipping options available.'
+         } else {
+            selectedShippingOption = +shippingOptions[index].id
+         }
+      }
+   }
+   
+   const selectPickupOption = async () => {
+      if (shippingOptions) {
+         let pickupIndex = +shippingOptions.findIndex(v => v.code === data.localPickupCode)
+         if (pickupIndex === -1) {
+            errorMessage = 'Something went wrong while setting the shipping option to local pickup.'
+         } else {
+            selectedShippingOption = +shippingOptions[pickupIndex].id                    
+         }
+      }
    }
 
    const setOrderState = async (state: string) => {
@@ -194,14 +223,11 @@
                            shippingOptions = await getShippingOptions()
                            if (!shippingOptions) {
                               errorMessage = 'Something went wrong while getting shipping options.'
-                           } else if (delivery === 'ship') {
-                              $order = await setShippingOption(+shippingOptions[0].id) // set cheapest shipping option as default
-                           } else if (delivery === 'pickup') {
-                              let pickupIndex = +shippingOptions.findIndex(v => v.code === data.localPickupCode)
-                              if (pickupIndex === -1) {
-                                 errorMessage = 'Something went wrong while setting the shipping option to local pickup.'
-                              } else {
-                                 $order = await setShippingOption(+shippingOptions[pickupIndex].id)                         
+                           } else {
+                              if (delivery === 'ship') {
+                                 await selectCheapestShippingOption()
+                              } else if (delivery === 'pickup') {
+                                 await selectPickupOption()
                               }
                            }
                         }
@@ -223,7 +249,10 @@
                               value="ship" 
                               class="focus:ring-0 text-violet-600"
                               checked={delivery === 'ship'} 
-                              on:change={() => { delivery = 'ship' }} 
+                              on:change={ async () => { 
+                                 delivery = 'ship'
+                                 await selectCheapestShippingOption()
+                              }} 
                            />
                            <span class="ml-3">Ship</span>
                            <Truck class="ml-auto" />
@@ -239,16 +268,9 @@
                               value="pickup" 
                               class="focus:ring-0 text-violet-600"
                               checked={delivery === 'pickup'} 
-                              on:change={async () => { 
+                              on:change={ async () => { 
                                  delivery = 'pickup' 
-                                 if (shippingOptions) { 
-                                    let pickupIndex = +shippingOptions.findIndex(v => v.code === data.localPickupCode)
-                                    if (pickupIndex === -1) {
-                                       errorMessage = 'Something went wrong while setting the shipping option to local pickup.'
-                                    } else {            
-                                       $order = await setShippingOption(+shippingOptions[pickupIndex].id)
-                                    }
-                                 }
+                                 await selectPickupOption()
                               }} 
                            />
                            <span class="ml-3">Pick Up</span>
@@ -261,7 +283,7 @@
                {#if delivery === 'ship' && shippingOptions}
                <section id="shipping-method">
                   <h3 class="mb-3 text-xl font-medium text-gray-900" id="payment-heading">Shipping Method</h3>
-                  <select bind:value={shippingOptionId} on:change={async () => { $order = await setShippingOption(shippingOptionId) } } name="shippingOptionId" required class="block w-full rounded-md border-gray-200 focus:border-2 focus:border-violet-600 text-gray-600 py-3">
+                  <select bind:value={selectedShippingOption} name="selectedShippingOption" required class="block w-full rounded-md border-gray-200 focus:border-2 focus:border-violet-600 text-gray-600 py-3">
                      {#each shippingOptions as shippingOption}
                         <option value={shippingOption.id}>{shippingOption.name} {formatCurrency(shippingOption.price, data.defaultCurrency)}</option>
                      {:else}
