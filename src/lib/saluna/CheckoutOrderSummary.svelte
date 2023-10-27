@@ -1,17 +1,15 @@
 <script lang="ts">
    import type { Writable } from 'svelte/store'
-   import type { Customer, Order } from '$lib/generated/graphql'
+   import type { Order } from '$lib/generated/graphql'
    import { getContext } from 'svelte'
    import { formatCurrency } from '$lib/saluna/utils'
    import VendureAsset from '$lib/saluna/VendureAsset.svelte'
 
    export let currency: string
-
-   const customer: Writable<Customer> = getContext('customer')
    const order: Writable<Order> = getContext('order')
    $: lines = $order?.lines || []
-
    let orderSummaryOpen = false
+
    const toggleOrderSummary = () => {
       let orderSummary = document.getElementById('order-summary') as HTMLElement
       if (orderSummaryOpen) {
@@ -98,7 +96,7 @@
          
          <p class="py-6 flex items-center justify-between border-t border-gray-200 text-sm font-medium text-gray-900">
             <span class="text-base">Total</span>
-            <span class="text-base">{formatCurrency($order?.total, currency)}</span>
+            <span class="text-base">{formatCurrency($order?.totalWithTax, currency)}</span>
          </p>
 
       </div>

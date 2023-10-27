@@ -283,9 +283,9 @@
                {#if delivery === 'ship' && shippingOptions}
                <section id="shipping-method">
                   <h3 class="mb-3 text-xl font-medium text-gray-900" id="payment-heading">Shipping Method</h3>
-                  <select bind:value={selectedShippingOption} name="selectedShippingOption" required class="block w-full rounded-md border-gray-200 focus:border-2 focus:border-violet-600 text-gray-600 py-3">
+                  <select bind:value={selectedShippingOption} required class="block w-full rounded-md border-gray-200 focus:border-2 focus:border-violet-600 text-gray-600 py-3">
                      {#each shippingOptions as shippingOption}
-                        <option value={shippingOption.id}>{shippingOption.name} {formatCurrency(shippingOption.price, data.defaultCurrency)}</option>
+                        <option value={parseInt(shippingOption.id)}>{shippingOption.name} {formatCurrency(shippingOption.price, data.defaultCurrency)}</option>
                      {:else}
                         No shipping options available
                      {/each}
