@@ -2,7 +2,6 @@ import type { Cookies } from '@sveltejs/kit'
 import type { RegisterCustomerInput } from '$lib/generated/graphql'
 import { gql } from '$lib/generated'
 import { query, parseAuthCookie } from './'
-import { VENDURE_REQUIRE_VERIFICATION } from '$env/static/private'
 
 export const signUp = async function(locals: any, cookies: Cookies, input: RegisterCustomerInput) {
    const SignUp = gql(`
@@ -21,10 +20,8 @@ export const signUp = async function(locals: any, cookies: Cookies, input: Regis
    const response = await query({ document: SignUp, variables: { input }, locals })
    if (!response) return null
 
-   if (!VENDURE_REQUIRE_VERIFICATION) {
-      // Capture the credentials
-      await parseAuthCookie(response.headers.getSetCookie(), locals, cookies)
-   }
+   // Capture the credentials
+   await parseAuthCookie(response.headers.getSetCookie(), locals, cookies)
 
    return await response.json()
       .then((body:any) => body?.data?.registerCustomerAccount)

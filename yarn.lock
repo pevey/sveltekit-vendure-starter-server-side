@@ -1321,10 +1321,10 @@
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
   integrity sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==
 
-"@stripe/stripe-js@^1.52.1":
-  version "1.54.2"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.54.2.tgz#0665848e22cbda936cfd05256facdfbba121438d"
-  integrity sha512-R1PwtDvUfs99cAjfuQ/WpwJ3c92+DAMy9xGApjqlWQMj0FKQabUAys2swfTRNzuYAYJh7NqK2dzcYVNkKLEKUg==
+"@stripe/stripe-js@^2.1.10":
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-2.1.10.tgz#d5f0a85def710e7a798e18e9950c4ef619dab917"
+  integrity sha512-h79zhwvxAJVAvtVjtMoz++DtwI7GdcEItmTC0P2gciZoFUeAO6XX9DL+UXm9uADiEaUvTKqrExYwtBTlMYAaPA==
 
 "@sveltejs/adapter-node@^1.3.1":
   version "1.3.1"
@@ -1336,10 +1336,10 @@
     "@rollup/plugin-node-resolve" "^15.0.1"
     rollup "^3.7.0"
 
-"@sveltejs/kit@^1.27.0":
-  version "1.27.0"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.27.0.tgz#aec182a10e61e079a322ad26d9b5bd610919a7a9"
-  integrity sha512-a1wPIq2uO3RsTmV+KbA4venOgCJDbfHTXFe+g7eJR3N8l46DSuulUONJ1qnk2EnZWYC1Uj3Wbp3US0WFocIzXg==
+"@sveltejs/kit@^1.27.1":
+  version "1.27.1"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.27.1.tgz#dd691b108e974a2a155ad4a5956848a2332941a4"
+  integrity sha512-nYkOUJKbeI8fcwvt/cyhTdz6VG4kT6XVprNnzfIwif+IZ8RvxvJuPhPhYjz14ASIcMLpq8xC6D3X4xH3bvWi+Q==
   dependencies:
     "@sveltejs/vite-plugin-svelte" "^2.4.1"
     "@types/cookie" "^0.5.1"
@@ -4039,12 +4039,12 @@ sveltekit-search-params@^1.0.15:
   resolved "https://registry.yarnpkg.com/sveltekit-search-params/-/sveltekit-search-params-1.0.15.tgz#38b42e8743250ea346a310742e91bd04c322eeaa"
   integrity sha512-LLuG961adpMMnyG/5Ixj9Cv++62ol7aSpVpE0qIFzQuOZ/5J3PwSoXu06pBw9DZi5Awj40OXtGLtpyh6WZjqVQ==
 
-sveltekit-stripe@^2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/sveltekit-stripe/-/sveltekit-stripe-2.0.5.tgz#a5ed69b29478a56dc7c59eba415e4c7386ae3230"
-  integrity sha512-K52mxucWtL5AbuTpkAzZVmc5uObURkmY488a6G8AHkyIjnvjhXJ3SRSwjud5K+uzMLdfXE7JVhqSxCvuPLEXPw==
+sveltekit-stripe@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/sveltekit-stripe/-/sveltekit-stripe-2.1.1.tgz#4fbd0d95ee280f66b57c997e4fd0f8df1c01db56"
+  integrity sha512-70YrfJjThjKiz7JjEOd7JSAhMhLRFUL/Fm6S6UQOv2gnMBvg+L3eJdJly/IKVk/53/3FiN8POgcf8VL/Zjp4sQ==
   dependencies:
-    "@stripe/stripe-js" "^1.52.1"
+    "@stripe/stripe-js" "^2.1.10"
 
 sveltekit-superfetch@^3.0.3:
   version "3.0.3"

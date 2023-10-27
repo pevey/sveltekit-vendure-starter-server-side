@@ -11,7 +11,8 @@ import {
    PUBLIC_DEFAULT_CURRENCY,
    PUBLIC_REQUIRE_EMAIL_VERIFICATION,
    PUBLIC_TURNSTILE_SITE_KEY,
-   PUBLIC_STRIPE_KEY
+   PUBLIC_STRIPE_KEY,
+   PUBLIC_LOCAL_PICKUP_CODE
 } from "$env/static/public"
 import {
    VENDURE_SHOPAPI_DEV_URL,
@@ -47,6 +48,7 @@ export const config: SalunaConfig = {
          }
       ],
       defaultCurrency: PUBLIC_DEFAULT_CURRENCY || 'USD',
+      localPickupCode: PUBLIC_LOCAL_PICKUP_CODE,
       requireEmailVerification: PUBLIC_REQUIRE_EMAIL_VERIFICATION === 'true'
    },
    turnstile: {
@@ -75,6 +77,7 @@ export interface SalunaConfig {
       shopApiUrl: string,
       shopApiHeaders: any[],
       defaultCurrency: string,
+      localPickupCode: string,
       requireEmailVerification: boolean
    },
    turnstile: {

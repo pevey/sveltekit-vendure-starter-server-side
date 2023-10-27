@@ -39,7 +39,7 @@
                   {/each}
                   {#if user}
                      <a href="/account" use:close class="py-2 px-3 mr-2 mt-12 rounded-md font-medium text-lg hover:bg-stone-200">Your Profile</a>
-                     <form action="/auth?/logout" method="POST">
+                     <form action="/auth?/signOut" method="POST">
                         <button type="submit" class="py-2 px-3 mr-2 rounded-md font-medium text-lg hover:bg-stone-200">Sign Out</button>
                      </form>
                   {:else}

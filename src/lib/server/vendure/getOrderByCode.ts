@@ -6,6 +6,7 @@ export const getOrderByCode = async function(locals: App.Locals, code: string) {
       query GetOrderByCode($code: String!) {
          orderByCode(code: $code) {
             id
+            code
             state
             lines {
                id
@@ -29,6 +30,6 @@ export const getOrderByCode = async function(locals: App.Locals, code: string) {
    `)
    return await query({ document: GetOrderByCode, variables: { code }, locals })
       .then((response) => response?.json())
-      .then((body) => body?.data?.activeOrder)
+      .then((body) => body?.data?.orderByCode)
       .catch(() => { return null })
 }

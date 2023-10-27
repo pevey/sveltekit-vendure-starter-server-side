@@ -1,7 +1,7 @@
 import type { RequestHandler } from './$types'
 import { validateToken } from 'sveltekit-turnstile'
 import { error, json } from '@sveltejs/kit'
-import { getCustomerAddresses, getOrderPaymentMethods, createStripePaymentIntent } from '$lib/server/vendure'
+import { setOrderState, getCustomerAddresses, getOrderPaymentMethods, createStripePaymentIntent } from '$lib/server/vendure'
 
 export const POST: RequestHandler = async ({ request, locals }) => {
    const data = await request.json()
@@ -9,29 +9,30 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	if (!await validateToken(token, locals.config.turnstile.privateKey)) {
       throw error(420, { message: 'Bot risk' })
    }
-
-   // combine these in promise.all
-   const addresses = locals.user? await getCustomerAddresses(locals) : []
+   const promises = Promise.all([
+      // setOrderState(locals, 'AddingItems'),
+      getCustomerAddresses(locals),
+      getOrderPaymentMethods(locals),
+      createStripePaymentIntent(locals)   
+   ])
+   // const [_, addresses, paymentOptions, paymentIntent] = await promises
+   const [addresses, paymentOptions, paymentIntent] = await promises
    const contacts = getContacts(addresses)
-   const paymentOptions = await getOrderPaymentMethods(locals)
-   const paymentIntent = await createStripePaymentIntent(locals)
-
 	return json({ contacts, paymentOptions, paymentIntent })
 }
 
-function getContacts(addresses: any[]) {
-   console.log(addresses)
+function getContacts(addresses: any[] = []) {
    let contacts = []
    for (let address of addresses) {
       contacts.push({
-         name: address.first_name + ' ' + address.last_name,
+         name: address.fullName,
          address: {
-            line1: address.address_1,
-            line2: address.address_2,
+            line1: address.streeLine1,
+            line2: address.streetLine2,
             city: address.city,
             state: address.province,
-            postal_code: address.postal_code,
-            country: address.country_code.toUpperCase(),
+            postal_code: address.postalCode,
+            country: address.country.toUpperCase(),
          }
       })
    }

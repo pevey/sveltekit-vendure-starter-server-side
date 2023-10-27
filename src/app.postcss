@@ -3,18 +3,47 @@
 @tailwind components;
 @tailwind utilities;
 
-/* FORMS */
-[data-fs-label] {
-   @apply block m-1 mt-4 text-gray-600 font-semibold text-sm;
+:root {
+   --primary-color: rgba(168, 85, 247, 1);
+ }
+ 
+ /* Override default focus colors for tailwindcss-forms https://github.com/tailwindlabs/tailwindcss-forms */
+ [type='text']:focus,
+ [type='email']:focus,
+ [type='url']:focus,
+ [type='password']:focus,
+ [type='number']:focus,
+ [type='date']:focus,
+ [type='datetime-local']:focus,
+ [type='month']:focus,
+ [type='search']:focus,
+ [type='tel']:focus,
+ [type='checkbox']:focus,
+ [type='radio']:focus,
+ [type='time']:focus,
+ [type='week']:focus,
+ [multiple]:focus,
+ textarea:focus,
+ select:focus {
+   --tw-ring-color: var(--primary-color);
+   border-color: var(--primary-color);
+ }
+
+ /* FORMS */
+[data-fs-label], .label {
+   @apply block m-1 mt-4 text-gray-600 font-semibold;
 }
-[data-fs-input] {
-   @apply w-full block py-3 px-4 text-sm text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-purple-500 rounded-lg;
+[data-fs-input], .input {
+   @apply w-full block py-3 px-4 text-gray-900 placeholder-gray-400 border border-gray-200 focus:border-violet-600 rounded-md;
 }
-[data-fs-validation] {
+[data-fs-validation], .validation {
    @apply block my-2 text-sm text-red-600;
 }
 .button {
    @apply inline-block w-full my-4 py-3 px-5 text-sm font-semibold text-white bg-orange-900 hover:bg-gray-900 rounded-md transition duration-200
+}
+.checkbox {
+   @apply mr-2 h-5 w-5 rounded-md text-violet-500 border border-gray-200 focus:border focus:border-gray-200 focus:ring-0 checked:border-2 checked:border-violet-500 checked:ring-0;
 }
 .message {
    @apply block my-8 text-lg font-semibold text-gray-600;

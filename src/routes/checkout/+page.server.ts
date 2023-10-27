@@ -1,11 +1,11 @@
 import type { PageServerLoad, Actions } from './$types'
-import { fail, redirect } from '@sveltejs/kit'
+import { setOrderState } from '$lib/server/vendure'
+import { fail } from '@sveltejs/kit'
 
 export const load: PageServerLoad = async function ({ locals }) {
-   //if (!locals.user) throw redirect(302, '/auth?rurl=checkout')
-   if (!locals.cart) throw redirect(302, '/cart')
    return {
-      defaultCurrency: locals.config.defaultCurrency,
+      localPickupCode: locals.config.vendure.localPickupCode,
+      defaultCurrency: locals.config.vendure.defaultCurrency,
       siteName: locals.config.site.siteName,
       turnstileKey: locals.config.turnstile.publicKey,
       stripeKey: locals.config.stripe.publicKey,
@@ -13,21 +13,13 @@ export const load: PageServerLoad = async function ({ locals }) {
 }
 
 export const actions: Actions = {
-   default: async ({ locals, cookies }) => {
-      //remove cookie first because customer has already paid for the cart
-      cookies.set('cartid', '', {
-         path: '/',
-         maxAge: 0,
-         sameSite: 'strict',
-         httpOnly: true,
-         secure: true
-      })
-      // locals.cartid = ''
-      // const order = await medusa.completeCart(locals)
-      // if (order) {
-      //    return { success: true, order: order }
-      // } else {
-      //    return fail (400, { success: false })
-      // }
+   default: async ({ locals }) => {
+      // if we get here, there was an error with the payment
+      // set state back to 'AddingItems'
+      if (await setOrderState(locals, 'AddingItems')) {
+         return { success: true }
+      } else {
+         fail(400, { success: false })
+      }
    }
 }

@@ -6,6 +6,8 @@ export const getOrderShippingMethods = async function(locals: App.Locals) {
       query GetOrderShippingMethods {
          eligibleShippingMethods {
             id
+            code
+            name
             price
             description
          }
