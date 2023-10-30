@@ -1,6 +1,6 @@
 <script lang="ts">
    import type { SearchResult } from '$lib/generated/graphql'
-   import SEO from '$lib/saluna/SEO.svelte'
+   import MetaTags from '$lib/saluna/MetaTags.svelte'
    import SearchHit from '$lib/saluna/SearchHit.svelte'
    import { enhance } from '$app/forms'
    import { queryParam } from 'sveltekit-search-params'
@@ -24,7 +24,7 @@
       window.location.href = `/product/${e.detail}`
    }
 </script>
-<!-- <SEO title="Search" /> -->
+<MetaTags title="Search" />
 <div class="max-w-screen-2xl mx-auto my-8 px-6 md:px-8">
    <form bind:this={searchForm} action="/search?/search" method="POST" use:enhance={ async ({ cancel }) => {
       if (!$q) cancel()

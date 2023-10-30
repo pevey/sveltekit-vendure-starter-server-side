@@ -3,10 +3,12 @@
    import type { Collection } from '$lib/generated/graphql'
    import VendureAsset from '$lib/saluna/VendureAsset.svelte'
    import ProductList from '$lib/saluna/ProductList.svelte'
+   import MetaTags from '$lib/saluna/MetaTags.svelte'
    export let data: PageData
    $: collection = data.collection as Collection
    $: products = data.products
 </script>
+<MetaTags title={collection.name} description={collection.description} />
 <section class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">{collection.name}</h1>
    <VendureAsset preview={collection.featuredAsset?.preview} preset="large" alt={collection.name} class="w-full rounded-md"/>

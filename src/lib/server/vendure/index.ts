@@ -50,6 +50,7 @@ export const query = async function(options: QueryOptions): Promise<Response|nul
 export { addCartLine } from './addCartLine'
 export { addOrderCouponCode } from './addOrderCouponCode'
 export { addOrderPayment } from './addOrderPayment'
+export { createCustomerAddress } from './createCustomerAddress'
 export { createStripePaymentIntent } from './createStripePaymentIntent'
 export { getActiveOrder } from './getActiveOrder'
 export { getCollection } from './getCollection'

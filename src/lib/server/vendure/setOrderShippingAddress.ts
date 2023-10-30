@@ -13,7 +13,8 @@ export const setOrderShippingAddress = async function(locals: App.Locals, input:
          }
       }
    `)
-   const response = await query({ document: SetOrderShippingAddress, variables: { input }, locals })
-      .catch(() => { return null })
-   return response?.ok
+   return await query({ document: SetOrderShippingAddress, variables: { input }, locals })
+   .then((response) => response?.json())
+   .then((body) => body?.data?.setOrderShippingAddress)
+   .catch(() => { return null })
 }

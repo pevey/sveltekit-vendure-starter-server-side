@@ -1,7 +1,7 @@
 <script lang="ts">
    import type { PageData } from './$types'
    import type { Customer, Order, ShippingMethodQuote, PaymentMethod, CreateCustomerInput, CreateAddressInput } from '$lib/generated/graphql'
-   import type { StripeAddressElementOptions } from 'sveltekit-stripe'
+   import type { StripeAddressElementOptions, Address as Addr } from 'sveltekit-stripe'
    import { Payment, Address, stripeClient, stripeElements } from 'sveltekit-stripe'
    import { Turnstile } from 'sveltekit-turnstile'
    import { Truck, Warehouse } from 'lucide-svelte'
@@ -11,7 +11,7 @@
    import { browser, dev } from '$app/environment'
    import { formatCurrency } from '$lib/saluna/utils'
    import CheckoutOrderSummary from '$lib/saluna/CheckoutOrderSummary.svelte'
-   import SEO from '$lib/saluna/SEO.svelte'
+   import MetaTags from '$lib/saluna/MetaTags.svelte'
 
    export let data: PageData
    const customer = writable<Customer>(data.user)
@@ -23,7 +23,7 @@
    let clientSecret: string
    let addressElementOptions: StripeAddressElementOptions = { mode: 'shipping' }
    let contacts: any[]
-   let address: any
+   let address: Addr
    let emailAddress: string
    let firstName: string
    let lastName: string
@@ -49,10 +49,13 @@
    }
 
    const setCustomer = async (customer: CreateCustomerInput) => {
-      return await fetch('/checkout/set-customer', { 
+      const response = await fetch('/checkout/set-customer', { 
          method: 'POST', 
          body: JSON.stringify(customer)
       }).catch(e => { if (dev) console.log(e) })
+      if (response?.status === 409) {
+         errorMessage = 'An account with that email address already exists.  Please sign in.'
+      }
    }
 
    const setAddress = async (address: CreateAddressInput) => {
@@ -107,6 +110,17 @@
          body: JSON.stringify({ state })
       }).then(res => res.json()).catch(e => { if (dev) console.log(e) })
    }
+
+   const saveNewAddress = async (address: CreateAddressInput) => {
+      if ($customer.addresses?.length) {
+         const existingAddress = $customer.addresses.find(v => v.streetLine1 === address.streetLine1 && v.streetLine2 === address.streetLine2 && v.city === address.city && v.province === address.province && v.postalCode === address.postalCode)
+         if (existingAddress) return
+      }
+      return await fetch('/checkout/save-new-address', { 
+         method: 'POST', 
+         body: JSON.stringify(address)
+      }).catch(e => { if (dev) console.log(e) })
+   }
 </script>
 <!-- <SEO title="Checkout" description="Checkout page for {data.siteName}"/> -->
 <noscript>
@@ -143,15 +157,22 @@
                processing = true
                // save guest customer
                if (!$customer) {
-                  if (!emailAddress || !firstName || !lastName) {
-                     errorMessage = 'Please complete all fields.'
+                  if (!emailAddress || !firstName || !lastName) errorMessage = 'Please complete all fields.'
+                  else await setCustomer({ emailAddress, firstName, lastName })
+                  if (errorMessage) {
                      processing = false
                      cancel()
                   }
-                  await setCustomer({ emailAddress, firstName, lastName }).catch(e => {
-                     errorMessage = 'Something went wrong.  Please contact us by phone or email for assistance.'
-                     processing = false
-                     cancel()
+               // save address if new
+               } else {
+                  await saveNewAddress({
+                     fullName: `${firstName} ${lastName}`,
+                     streetLine1: address.line1,
+                     streetLine2: address.line2,
+                     city: address.city,
+                     province: address.state,
+                     postalCode: address.postal_code,
+                     countryCode: address.country
                   })
                }
                // transition to ArrangingPayment state
@@ -163,7 +184,7 @@
                      cancel()
                   }
                }
-               // submit to Stripe for validation and wallet collection
+               // submit to Stripe
                let stripeResponse = await $stripeElements?.submit()
                if (stripeResponse && !stripeResponse.error) {
                   // save payment method
@@ -201,7 +222,7 @@
                   {#if $customer}
                      <div>{$customer.emailAddress}</div>
                   {:else}
-                     <input name="emailAddress" bind:value={emailAddress} type="text" class="input mt-2">
+                     <input name="emailAddress" bind:value={emailAddress} on:change={ async () => { await setCustomer({ emailAddress, firstName: '', lastName: '' }) } } type="text" class="input mt-2">
                      <div class="mt-2 flex items-center">
                         <input name="offers" id="offers" type="checkbox" class="checkbox"> 
                         Send me emails with news and offers
@@ -302,6 +323,9 @@
                   <h3 class="mb-3 text-xl font-medium text-gray-900" id="payment-heading">Payment</h3>
                   <Payment publicKey={data.stripeKey} {clientSecret} />
                </section>
+               {#if errorMessage}
+                  <p class="text-red-600 text-lg font-semibold">{errorMessage}</p>
+               {/if}
                <!-- Submission -->         
                <button disabled={processing} type="submit" class="w-full items-center justify-center rounded-md border border-transparent bg-lime-600 px-5 py-3 text-base font-medium text-white hover:bg-lime-700">
                   {#if processing} Processing...{:else} Complete Your Order {/if}

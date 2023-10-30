@@ -7,7 +7,7 @@
    import { invalidateAll } from '$app/navigation'
    import { PUBLIC_DEFAULT_CURRENCY } from '$env/static/public'
    import { formatCurrency } from '$lib/saluna/utils'
-   import SEO from '$lib/saluna/SEO.svelte'
+   import MetaTags from '$lib/saluna/MetaTags.svelte'
    import Rating from '$lib/saluna/Rating.svelte'
    import ProductReviews from '$lib/saluna/ProductReviews.svelte'
    import FAQ from '$lib/saluna/FAQ.svelte'
@@ -23,7 +23,7 @@
    let tab: string = 'reviews'
    let selectedVariantId: string = data?.product?.variants[0]?.id
 </script>
-<!-- <SEO title={product.name} description={product.description} image={product.assets[0]?.url} /> -->
+<MetaTags title={product.name} description={product.description} />
 <div class="max-w-screen-2xl mx-auto py-6 px-6 sm:px-12 md:px-14 lg:grid lg:grid-cols-2 lg:gap-x-6">
    <div class="lg:max-w-lg">
       <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">{product.name}</h1>

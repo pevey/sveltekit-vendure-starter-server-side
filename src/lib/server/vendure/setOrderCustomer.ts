@@ -13,7 +13,8 @@ export const setOrderCustomer = async function(locals: App.Locals, input: Create
          }
       }
    `)
-   const response = await query({ document: SetOrderCustomer, variables: { input }, locals })
-      .catch(() => { return null })
-   return response?.ok
+   return await query({ document: SetOrderCustomer, variables: { input }, locals })
+   .then((response) => response?.json())
+   .then((body) => body?.data?.setCustomerForOrder)
+   .catch(() => { return null })
 }

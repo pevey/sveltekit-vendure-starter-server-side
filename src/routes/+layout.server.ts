@@ -6,6 +6,6 @@ export const load: LayoutServerLoad = async function ({ locals }) {
       collections: await getTopLevelCollections(),
       // locals.user and locals.cart are set in hooks.server.js
       user: locals.user, 
-      cart: locals.cart 
+      cart: locals.cart
    }
 }
