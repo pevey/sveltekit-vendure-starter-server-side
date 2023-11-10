@@ -15,7 +15,7 @@ const config = {
    kit: {
       adapter: adapter(),
       alias: {
-			'$src/*': '/src/*'
+			'$src/*': 'src/*'
 		}
       // csp: {
 		// 	directives: {

@@ -1,8 +1,10 @@
 import type { CodegenConfig } from '@graphql-codegen/cli'
 import 'dotenv/config'
 
+const IS_DEV = process.env.APP_ENV === 'dev'
+
 const config: CodegenConfig = {
-   schema: process.env.VENDURE_API_URL,
+   schema: IS_DEV? process.env.VENDURE_SHOPAPI_DEV_URL: process.env.VENDURE_SHOPAPI_PROD_URL,
    documents: ['src/**/*.{ts,svelte}', '!src/lib/generated/*'],
    generates: {
       'src/lib/generated/': {
