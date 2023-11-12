@@ -5,8 +5,8 @@
    import AuthForm from '$lib/saluna/AuthForm.svelte'
    export let data: PageData
    const handleSignIn = async function() {
-      invalidateAll()
-      goto(data.rurl? data.rurl : '/')
+      await invalidateAll()
+      await goto(data.rurl? data.rurl : '/')
    }
 </script>
 <AuthContainer>
