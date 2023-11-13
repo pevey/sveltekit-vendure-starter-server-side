@@ -8,7 +8,7 @@ If you are not familiar with Vendure, you can learn more on [the project web sit
 
 This project is under active development.  Breaking changes will frequently occur.
 
-- Project web site will be here:https://saluna.com (not live)
+- Project web site will be here: https://saluna.com (not live)
 - CLI to create a new project using this starter app will be here: https://github.com/pevey/create-saluna
 
 ## Creating a project
