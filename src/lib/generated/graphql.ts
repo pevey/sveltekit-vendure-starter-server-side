@@ -1711,6 +1711,7 @@ export type Mutation = {
    * shipping method will apply to.
    */
   setOrderShippingMethod: SetOrderShippingMethodResult;
+  submitProductReview: ProductReview;
   /** Transitions an Order to a new state. Valid next states can be found by querying `nextOrderStates` */
   transitionOrderToState?: Maybe<TransitionOrderToStateResult>;
   /** Update an existing Customer */
@@ -1731,6 +1732,7 @@ export type Mutation = {
    * provided here.
    */
   verifyCustomerAccount: VerifyCustomerAccountResult;
+  voteOnReview: ProductReview;
 };
 
 
@@ -1841,6 +1843,11 @@ export type MutationSetOrderShippingMethodArgs = {
 };
 
 
+export type MutationSubmitProductReviewArgs = {
+  input: SubmitProductReviewInput;
+};
+
+
 export type MutationTransitionOrderToStateArgs = {
   state: Scalars['String']['input'];
 };
@@ -1870,6 +1877,12 @@ export type MutationUpdateCustomerPasswordArgs = {
 export type MutationVerifyCustomerAccountArgs = {
   password?: InputMaybe<Scalars['String']['input']>;
   token: Scalars['String']['input'];
+};
+
+
+export type MutationVoteOnReviewArgs = {
+  id: Scalars['ID']['input'];
+  vote: Scalars['Boolean']['input'];
 };
 
 export type NativeAuthInput = {
@@ -2539,7 +2552,7 @@ export type Product = Node & {
   assets: Array<Asset>;
   collections: Array<Collection>;
   createdAt: Scalars['DateTime']['output'];
-  customFields?: Maybe<Scalars['JSON']['output']>;
+  customFields?: Maybe<ProductCustomFields>;
   description: Scalars['String']['output'];
   facetValues: Array<FacetValue>;
   featuredAsset?: Maybe<Asset>;
@@ -2547,6 +2560,8 @@ export type Product = Node & {
   languageCode: LanguageCode;
   name: Scalars['String']['output'];
   optionGroups: Array<ProductOptionGroup>;
+  reviews: ProductReviewList;
+  reviewsHistogram: Array<ProductReviewHistogramItem>;
   slug: Scalars['String']['output'];
   translations: Array<ProductTranslation>;
   updatedAt: Scalars['DateTime']['output'];
@@ -2557,8 +2572,20 @@ export type Product = Node & {
 };
 
 
+export type ProductReviewsArgs = {
+  options?: InputMaybe<ProductReviewListOptions>;
+};
+
+
 export type ProductVariantListArgs = {
   options?: InputMaybe<ProductVariantListOptions>;
+};
+
+export type ProductCustomFields = {
+  __typename?: 'ProductCustomFields';
+  featuredReview?: Maybe<ProductReview>;
+  reviewCount?: Maybe<Scalars['Float']['output']>;
+  reviewRating?: Maybe<Scalars['Float']['output']>;
 };
 
 export type ProductFilterParameter = {
@@ -2567,6 +2594,8 @@ export type ProductFilterParameter = {
   id?: InputMaybe<IdOperators>;
   languageCode?: InputMaybe<StringOperators>;
   name?: InputMaybe<StringOperators>;
+  reviewCount?: InputMaybe<NumberOperators>;
+  reviewRating?: InputMaybe<NumberOperators>;
   slug?: InputMaybe<StringOperators>;
   updatedAt?: InputMaybe<DateOperators>;
 };
@@ -2635,11 +2664,90 @@ export type ProductOptionTranslation = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type ProductReview = Node & {
+  __typename?: 'ProductReview';
+  authorLocation?: Maybe<Scalars['String']['output']>;
+  authorName: Scalars['String']['output'];
+  body?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  downvotes: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  product: Product;
+  productVariant?: Maybe<ProductVariant>;
+  rating: Scalars['Float']['output'];
+  response?: Maybe<Scalars['String']['output']>;
+  responseCreatedAt?: Maybe<Scalars['DateTime']['output']>;
+  state: Scalars['String']['output'];
+  summary: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  upvotes: Scalars['Int']['output'];
+};
+
+export type ProductReviewFilterParameter = {
+  authorLocation?: InputMaybe<StringOperators>;
+  authorName?: InputMaybe<StringOperators>;
+  body?: InputMaybe<StringOperators>;
+  createdAt?: InputMaybe<DateOperators>;
+  downvotes?: InputMaybe<NumberOperators>;
+  id?: InputMaybe<IdOperators>;
+  rating?: InputMaybe<NumberOperators>;
+  response?: InputMaybe<StringOperators>;
+  responseCreatedAt?: InputMaybe<DateOperators>;
+  state?: InputMaybe<StringOperators>;
+  summary?: InputMaybe<StringOperators>;
+  updatedAt?: InputMaybe<DateOperators>;
+  upvotes?: InputMaybe<NumberOperators>;
+};
+
+export type ProductReviewHistogramItem = {
+  __typename?: 'ProductReviewHistogramItem';
+  bin: Scalars['Int']['output'];
+  frequency: Scalars['Int']['output'];
+};
+
+export type ProductReviewList = PaginatedList & {
+  __typename?: 'ProductReviewList';
+  items: Array<ProductReview>;
+  totalItems: Scalars['Int']['output'];
+};
+
+export type ProductReviewListOptions = {
+  /** Allows the results to be filtered */
+  filter?: InputMaybe<ProductReviewFilterParameter>;
+  /** Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND. */
+  filterOperator?: InputMaybe<LogicalOperator>;
+  /** Skips the first n results, for use in pagination */
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  /** Specifies which properties to sort the results by */
+  sort?: InputMaybe<ProductReviewSortParameter>;
+  /** Takes n results, for use in pagination */
+  take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type ProductReviewSortParameter = {
+  authorLocation?: InputMaybe<SortOrder>;
+  authorName?: InputMaybe<SortOrder>;
+  body?: InputMaybe<SortOrder>;
+  createdAt?: InputMaybe<SortOrder>;
+  downvotes?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  rating?: InputMaybe<SortOrder>;
+  response?: InputMaybe<SortOrder>;
+  responseCreatedAt?: InputMaybe<SortOrder>;
+  state?: InputMaybe<SortOrder>;
+  summary?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  upvotes?: InputMaybe<SortOrder>;
+};
+
 export type ProductSortParameter = {
   createdAt?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
+  featuredReview?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
+  reviewCount?: InputMaybe<SortOrder>;
+  reviewRating?: InputMaybe<SortOrder>;
   slug?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
 };
@@ -3170,6 +3278,17 @@ export type StringOperators = {
   notEq?: InputMaybe<Scalars['String']['input']>;
   notIn?: InputMaybe<Array<Scalars['String']['input']>>;
   regex?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SubmitProductReviewInput = {
+  authorLocation?: InputMaybe<Scalars['String']['input']>;
+  authorName: Scalars['String']['input'];
+  body: Scalars['String']['input'];
+  customerId?: InputMaybe<Scalars['ID']['input']>;
+  productId: Scalars['ID']['input'];
+  rating: Scalars['Float']['input'];
+  summary: Scalars['String']['input'];
+  variantId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 /** Indicates that an operation succeeded, where we do not want to return any more specific information. */

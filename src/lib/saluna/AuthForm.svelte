@@ -14,7 +14,7 @@
    let state = data.code? 'reset' : 'signIn'
    let token: string = '' // turnstile token
    let reveal: boolean = false
-   let debug: boolean = false
+   let debug: boolean = true
    const dispatch = createEventDispatcher()
 </script>
 
@@ -27,7 +27,7 @@
 
 {:else if state === 'signIn'}
    <Form {debug} action="/auth?/signIn" form={data.signInForm} schema={signInReq} let:config let:message options={{ 
-      onResult: ({ result }) => { if (result.type === 'success') { dispatch('success') }; token = '' },
+      onResult: ({ result }) => { console.log(result); if (result.type === 'success') { dispatch('success') }; token = '' },
       timeoutMs: 8000, multipleSubmits: 'prevent'
    }}>
       <h3 class="font-heading text-3xl text-gray-900 font-semibold text-center mb-4">Sign In to Your Account</h3>
