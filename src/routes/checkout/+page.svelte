@@ -1,7 +1,7 @@
 <script lang="ts">
    import type { PageData } from './$types'
    import type { Customer, Order, ShippingMethodQuote, PaymentMethod, CreateCustomerInput, CreateAddressInput } from '$lib/generated/graphql'
-   import type { Address, StripeAddressElementOptions, StripeElementsOptions } from 'sveltekit-stripe'
+   import type { Address, StripeAddressElementOptions } from 'sveltekit-stripe'
    import { Elements, PaymentElement, AddressElement } from 'sveltekit-stripe'
    import { Turnstile } from 'sveltekit-turnstile'
    import { Truck, Warehouse } from 'lucide-svelte'
@@ -20,7 +20,6 @@
    setContext('customer', customer)
 
    let token: string
-   let clientSecret: string
    let addressElementOptions: StripeAddressElementOptions = { mode: 'shipping' }
    let contacts: any[]
    let address: Address
