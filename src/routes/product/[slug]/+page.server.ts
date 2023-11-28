@@ -6,27 +6,27 @@ import { addReviewReq } from '$lib/saluna/validators'
 import { SECRET_TURNSTILE_KEY } from '$env/static/private'
 
 export const load = (async function ({ params }) {
-   return {
-      product: await getProduct(params.slug),
-      reviewForm: await superValidate(addReviewReq, { id: 'review' })
-   }
+	return {
+		product: await getProduct(params.slug),
+		reviewForm: await superValidate(addReviewReq, { id: 'review' })
+	}
 }) satisfies PageServerLoad
 
 export const actions: Actions = {
-   addReview: async ({ request, locals }) => {
-      const form = await superValidate(request, addReviewReq, { id: 'review' })
-      if (!locals.user) return message(form, 'You must be signed in to add a review', { status: 401 })
-      if (!form.valid) return message(form, 'Something went wrong', { status: 500 })
-      if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) return message(form, 'Something went wrong', { status: 400 })
-      const review = {
-         product_id: form.data.productId,
-         display_name: form.data.displayName,
-         content: form.data.content,
-         rating: form.data.rating
-      }
-      // const success = await medusa.addReview(locals, review)
+	addReview: async ({ request, locals }) => {
+		const form = await superValidate(request, addReviewReq, { id: 'review' })
+		if (!locals.user) return message(form, 'You must be signed in to add a review', { status: 401 })
+		if (!form.valid) return message(form, 'Something went wrong', { status: 500 })
+		if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) return message(form, 'Something went wrong', { status: 400 })
+		const review = {
+			product_id: form.data.productId,
+			display_name: form.data.displayName,
+			content: form.data.content,
+			rating: form.data.rating
+		}
+		// const success = await medusa.addReview(locals, review)
 const success = true
-      if (success) return message(form, 'Thank you for your review.')
-      else return message(form, 'Something went wrong', { status: 500 })
-   }
+		if (success) return message(form, 'Thank you for your review.')
+		else return message(form, 'Something went wrong', { status: 500 })
+	}
 }

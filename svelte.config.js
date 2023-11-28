@@ -5,25 +5,25 @@ import 'dotenv/config'
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-   preprocess: vitePreprocess({
-      style: {
-         css: {
-            postcss: join(process.cwd(), 'postcss.config.cjs')
-         }
-      }
-   }),
-   kit: {
-      adapter: adapter(),
-      alias: {
+	preprocess: vitePreprocess({
+		style: {
+			css: {
+				postcss: join(process.cwd(), 'postcss.config.cjs')
+			}
+		}
+	}),
+	kit: {
+		adapter: adapter(),
+		alias: {
 			'$src/*': 'src/*'
 		}
-      // csp: {
+		// csp: {
 		// 	directives: {
 		// 		'script-src': ['self', 'https://laroastingco.com/', 'https://challenges.cloudflare.com/', 'https://js.stripe.com/'],
 		// 		'img-src': ['self', 'https://laroastingco.com/', 'data:', process.env.ORIGIN, 'https://challenges.cloudflare.com/', 'https://js.stripe.com/'],
 		// 	}
 		// }
-   },
+	},
 }
 
 export default config

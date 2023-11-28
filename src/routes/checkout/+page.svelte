@@ -1,121 +1,121 @@
 <script lang="ts">
-   import type { PageData } from './$types'
-   import type { Customer, Order, ShippingMethodQuote, PaymentMethod, CreateCustomerInput, CreateAddressInput } from '$lib/generated/graphql'
-   import type { Address, StripeAddressElementOptions } from 'sveltekit-stripe'
-   import { Elements, PaymentElement, AddressElement } from 'sveltekit-stripe'
-   import { Turnstile } from 'sveltekit-turnstile'
-   import { Truck, Warehouse } from 'lucide-svelte'
-   import { enhance } from '$app/forms'
-   import { writable } from 'svelte/store'
-   import { setContext } from 'svelte'
-   import { browser, dev } from '$app/environment'
-   import { formatCurrency } from '$lib/saluna/utils'
-   import CheckoutOrderSummary from '$lib/saluna/CheckoutOrderSummary.svelte'
-   import MetaTags from '$lib/saluna/MetaTags.svelte'
+	import type { PageData } from './$types'
+	import type { Customer, Order, ShippingMethodQuote, PaymentMethod, CreateCustomerInput, CreateAddressInput } from '$lib/generated/graphql'
+	import type { Address, StripeAddressElementOptions } from 'sveltekit-stripe'
+	import { Elements, PaymentElement, AddressElement } from 'sveltekit-stripe'
+	import { Turnstile } from 'sveltekit-turnstile'
+	import { Truck, Warehouse } from 'lucide-svelte'
+	import { enhance } from '$app/forms'
+	import { writable } from 'svelte/store'
+	import { setContext } from 'svelte'
+	import { browser, dev } from '$app/environment'
+	import { formatCurrency } from '$lib/saluna/utils'
+	import CheckoutOrderSummary from '$lib/saluna/CheckoutOrderSummary.svelte'
+	import MetaTags from '$lib/saluna/MetaTags.svelte'
 
-   export let data: PageData
-   const customer = writable<Customer>(data.user)
-   const order = writable<Order>(data.cart)
-   setContext('order', order)
-   setContext('customer', customer)
+	export let data: PageData
+	const customer = writable<Customer>(data.user)
+	const order = writable<Order>(data.cart)
+	setContext('order', order)
+	setContext('customer', customer)
 
-   let token: string
-   let addressElementOptions: StripeAddressElementOptions = { mode: 'shipping' }
-   let contacts: any[]
-   let address: Address
-   let emailAddress: string
-   let firstName: string
-   let lastName: string
-   let shippingOptions: ShippingMethodQuote[]
-   let selectedShippingOption: number
-   let paymentOptions: PaymentMethod[]
-   let delivery: 'ship'|'pickup' = 'ship'
-   let processing = false
-   let errorMessage: string|undefined
-   
-   $: { if (browser && shippingOptions) setShippingOption(selectedShippingOption) }
+	let token: string
+	let addressElementOptions: StripeAddressElementOptions = { mode: 'shipping' }
+	let contacts: any[]
+	let address: Address
+	let emailAddress: string
+	let firstName: string
+	let lastName: string
+	let shippingOptions: ShippingMethodQuote[]
+	let selectedShippingOption: number
+	let paymentOptions: PaymentMethod[]
+	let delivery: 'ship'|'pickup' = 'ship'
+	let processing = false
+	let errorMessage: string|undefined
+	
+	$: { if (browser && shippingOptions) setShippingOption(selectedShippingOption) }
 
-   const startCheckout = async (token: string) => {
-      const { paymentOptions, contacts } = await fetch('/checkout/start-checkout', { 
-         method: 'POST', 
-         body: JSON.stringify({ token } )
-      }).then(res => res.json()).catch(e => { if (dev) console.log(e) })
-      addressElementOptions.contacts = contacts
-   }
+	const startCheckout = async (token: string) => {
+		const { paymentOptions, contacts } = await fetch('/checkout/start-checkout', { 
+			method: 'POST', 
+			body: JSON.stringify({ token } )
+		}).then(res => res.json()).catch(e => { if (dev) console.log(e) })
+		addressElementOptions.contacts = contacts
+	}
 
-   const setCustomer = async (customer: CreateCustomerInput) => {
-      const response = await fetch('/checkout/set-customer', { 
-         method: 'POST', 
-         body: JSON.stringify(customer)
-      }).catch(e => { if (dev) console.log(e) })
-      if (response?.status === 409) {
-         errorMessage = 'An account with that email address already exists.  Please sign in.'
-      }
-   }
+	const setCustomer = async (customer: CreateCustomerInput) => {
+		const response = await fetch('/checkout/set-customer', { 
+			method: 'POST', 
+			body: JSON.stringify(customer)
+		}).catch(e => { if (dev) console.log(e) })
+		if (response?.status === 409) {
+			errorMessage = 'An account with that email address already exists.  Please sign in.'
+		}
+	}
 
-   const setAddress = async (address: CreateAddressInput) => {
-      return await fetch('/checkout/set-address', { 
-         method: 'POST', 
-         body: JSON.stringify(address)
-      }).catch(e => { if (dev) console.log(e) })
-   }
+	const setAddress = async (address: CreateAddressInput) => {
+		return await fetch('/checkout/set-address', { 
+			method: 'POST', 
+			body: JSON.stringify(address)
+		}).catch(e => { if (dev) console.log(e) })
+	}
 
-   const getShippingOptions = async () => {
-      return await fetch('/checkout/get-shipping-options')
-         .then(res => res.json()).catch(e => { if (dev) console.log(e) })
-   }
+	const getShippingOptions = async () => {
+		return await fetch('/checkout/get-shipping-options')
+			.then(res => res.json()).catch(e => { if (dev) console.log(e) })
+	}
 
-   const setShippingOption = async (id: number) => {
-      $order = await fetch('/checkout/set-shipping-option', { 
-         method: 'POST', 
-         body: JSON.stringify({ id })
-      }).then(res => res.json()).catch(e => { if (dev) console.log(e) })
-   }
-   
-   const selectCheapestShippingOption = async () => {
-      // set cheapest shipping option as default, but make sure it is not local pickup
-      if (shippingOptions) {
-         let index = 0
-         if (data.localPickupCode) {
-            let pickupIndex = +shippingOptions.findIndex(v => v.code === data.localPickupCode)
-            if (pickupIndex === index) index += 1
-         }
-         if (index === shippingOptions.length) {
-            errorMessage = 'There are no shipping options available.'
-         } else {
-            selectedShippingOption = +shippingOptions[index].id
-         }
-      }
-   }
-   
-   const selectPickupOption = async () => {
-      if (shippingOptions) {
-         let pickupIndex = +shippingOptions.findIndex(v => v.code === data.localPickupCode)
-         if (pickupIndex === -1) {
-            errorMessage = 'Something went wrong while setting the shipping option to local pickup.'
-         } else {
-            selectedShippingOption = +shippingOptions[pickupIndex].id                    
-         }
-      }
-   }
+	const setShippingOption = async (id: number) => {
+		$order = await fetch('/checkout/set-shipping-option', { 
+			method: 'POST', 
+			body: JSON.stringify({ id })
+		}).then(res => res.json()).catch(e => { if (dev) console.log(e) })
+	}
+	
+	const selectCheapestShippingOption = async () => {
+		// set cheapest shipping option as default, but make sure it is not local pickup
+		if (shippingOptions) {
+			let index = 0
+			if (data.localPickupCode) {
+				let pickupIndex = +shippingOptions.findIndex(v => v.code === data.localPickupCode)
+				if (pickupIndex === index) index += 1
+			}
+			if (index === shippingOptions.length) {
+				errorMessage = 'There are no shipping options available.'
+			} else {
+				selectedShippingOption = +shippingOptions[index].id
+			}
+		}
+	}
+	
+	const selectPickupOption = async () => {
+		if (shippingOptions) {
+			let pickupIndex = +shippingOptions.findIndex(v => v.code === data.localPickupCode)
+			if (pickupIndex === -1) {
+				errorMessage = 'Something went wrong while setting the shipping option to local pickup.'
+			} else {
+				selectedShippingOption = +shippingOptions[pickupIndex].id                    
+			}
+		}
+	}
 
-   const setOrderState = async (state: string) => {
-      return await fetch('/checkout/set-order-state', { 
-         method: 'POST', 
-         body: JSON.stringify({ state })
-      }).then(res => res.json()).catch(e => { if (dev) console.log(e) })
-   }
+	const setOrderState = async (state: string) => {
+		return await fetch('/checkout/set-order-state', { 
+			method: 'POST', 
+			body: JSON.stringify({ state })
+		}).then(res => res.json()).catch(e => { if (dev) console.log(e) })
+	}
 
-   const saveNewAddress = async (address: CreateAddressInput) => {
-      if ($customer.addresses?.length) {
-         const existingAddress = $customer.addresses.find(v => v.streetLine1 === address.streetLine1 && v.streetLine2 === address.streetLine2 && v.city === address.city && v.province === address.province && v.postalCode === address.postalCode)
-         if (existingAddress) return
-      }
-      return await fetch('/checkout/save-new-address', { 
-         method: 'POST', 
-         body: JSON.stringify(address)
-      }).catch(e => { if (dev) console.log(e) })
-   }
+	const saveNewAddress = async (address: CreateAddressInput) => {
+		if ($customer.addresses?.length) {
+			const existingAddress = $customer.addresses.find(v => v.streetLine1 === address.streetLine1 && v.streetLine2 === address.streetLine2 && v.city === address.city && v.province === address.province && v.postalCode === address.postalCode)
+			if (existingAddress) return
+		}
+		return await fetch('/checkout/save-new-address', { 
+			method: 'POST', 
+			body: JSON.stringify(address)
+		}).catch(e => { if (dev) console.log(e) })
+	}
 
 	const turnstile = async () => {
 		return await fetch('/checkout/turnstile', { 
@@ -126,34 +126,34 @@
 </script>
 <!-- <MetaTags title="Checkout" description="Checkout page for {data.siteName}"/> -->
 <noscript>
-   <p>Please enable javascript to complete checkout.</p>
-   <p>We use a third party (<a href="https://stripe.com">Stripe</a>) to process credit card payments for enhanced security.  Making payments on this site using Stripe requires javascript.</p>
+	<p>Please enable javascript to complete checkout.</p>
+	<p>We use a third party (<a href="https://stripe.com">Stripe</a>) to process credit card payments for enhanced security.  Making payments on this site using Stripe requires javascript.</p>
 </noscript>
 {#if (!$order?.lines)}
-   <p>Your cart is empty.</p>
+	<p>Your cart is empty.</p>
 {:else if !token}
-   <Turnstile theme="light" siteKey={data.turnstileKey} on:turnstile-callback={ async (e) => { 
-      token = e.detail.token
-      await startCheckout(token)
-   }} />
+	<Turnstile theme="light" siteKey={data.turnstileKey} on:turnstile-callback={ async (e) => { 
+		token = e.detail.token
+		await startCheckout(token)
+	}} />
 {:else}
-   <main class="lg:flex lg:min-h-full lg:flex-row-reverse lg:max-h-screen lg:overflow-hidden">
-      <!-- Logo on sm screen -->
-      <div class="px-4 py-6 sm:px-6 lg:hidden">
-         <div class="mx-auto flex max-w-lg">
-            <h1 class="sr-only">Checkout</h1>
-            <a href="/"><img src="/logo.png" class="mx-auto h-14 w-auto" alt="{data.siteName}" /></a>
-         </div>
-      </div>
-      <CheckoutOrderSummary currency={data.defaultCurrency} />
-      <section aria-labelledby="payment-heading" class="flex-auto px-4 pb-16 pt-6 sm:pt-8 sm:px-6 lg:px-8 lg:pb-4 overflow-auto">
-         <div class="mx-auto max-w-lg">
-            <!-- Logo on lg screen -->
-            <div class="hidden py-10 lg:flex">
-               <h1 class="sr-only">Checkout</h1>
-               <a href="/"><img src="/logo.png" alt="{data.siteName}" class="h-14 w-auto"></a>
-            </div>
-            <!-- Checkout Form -->
+	<main class="lg:flex lg:min-h-full lg:flex-row-reverse lg:max-h-screen lg:overflow-hidden">
+		<!-- Logo on sm screen -->
+		<div class="px-4 py-6 sm:px-6 lg:hidden">
+			<div class="mx-auto flex max-w-lg">
+				<h1 class="sr-only">Checkout</h1>
+				<a href="/"><img src="/logo.png" class="mx-auto h-14 w-auto" alt="{data.siteName}" /></a>
+			</div>
+		</div>
+		<CheckoutOrderSummary currency={data.defaultCurrency} />
+		<section aria-labelledby="payment-heading" class="flex-auto px-4 pb-16 pt-6 sm:pt-8 sm:px-6 lg:px-8 lg:pb-4 overflow-auto">
+			<div class="mx-auto max-w-lg">
+				<!-- Logo on lg screen -->
+				<div class="hidden py-10 lg:flex">
+					<h1 class="sr-only">Checkout</h1>
+					<a href="/"><img src="/logo.png" alt="{data.siteName}" class="h-14 w-auto"></a>
+				</div>
+				<!-- Checkout Form -->
 				<Elements publicKey={data.stripeKey} let:stripe let:elements elementsOptions={{ 
 					appearance: { 
 						theme: 'stripe',
@@ -354,7 +354,7 @@
 						</p>
 					</form>
 			</Elements>
-         </div>
-      </section>
-   </main>
+			</div>
+		</section>
+	</main>
 {/if}

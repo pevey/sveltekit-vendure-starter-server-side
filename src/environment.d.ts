@@ -3,8 +3,8 @@ export {}
 // Here we declare the members of the process.env object, so that we
 // can use them in our application code in a type-safe manner.
 declare global {
-    namespace NodeJS {
-        interface ProcessEnv {
+	namespace NodeJS {
+		interface ProcessEnv {
 			NODE_ENV: string
 			ORIGIN: string
 			VENDURE_SHOPAPI_DEV_URL: string
@@ -25,6 +25,6 @@ declare global {
 			SECRET_TURNSTILE_KEY: string
 			CLOUDFLARE_ACCESS_ID: string
 			CLOUDFLARE_ACCESS_SECRET: string
-        }
-    }
+		}
+	}
 }
