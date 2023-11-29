@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { SearchResult } from '$lib/generated/graphql'
 	import { enhance } from '$app/forms'
-	import { clickOutsideAction } from 'svelte-legos'
+	import { clickOutside } from '$lib/utils'
 	import SearchHit from '$lib/saluna/SearchHit.svelte'
 	
 	let q: string = ''
@@ -34,7 +34,7 @@
 		<input type="search" placeholder="Search" name="q" id="q" bind:value={q} on:input={() => searchForm.requestSubmit()} class="block w-full rounded-md border border-stone-300 py-3 pl-12 pr-3 leading-5 text-gray-700 placeholder-gray-400 focus:border-gray-500 focus:outline-none focus:ring-gray-500" />
 	</form>
 	{#if q}
-	<div use:clickOutsideAction on:clickoutside={() => q = ''} class="absolute overflow-auto max-h-[80vh] rounded-b-xl bg-white w-full z-50 border border-gray-200">
+	<div use:clickOutside on:clickOutside={() => q = ''} class="absolute overflow-auto max-h-[80vh] rounded-b-xl bg-white w-full z-50 border border-gray-200">
 		{#each hits as hit}
 			<SearchHit {hit} on:click={handleClick} />
 		{:else}

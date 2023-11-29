@@ -4,6 +4,7 @@
 	import Account from '$lib/saluna/Account.svelte'
 	import SearchBox from '$lib/saluna/SearchBox.svelte'
 	import SideBar from '$lib/saluna/SideBar.svelte'
+	import ThemeSwitcher from './ThemeSwitcher.svelte'
 	export let collections: Collection[]
 	export let user: Customer|null
 	export let cart: Order|null
@@ -28,6 +29,9 @@
 			<SearchBox />
 		</div>
 		<div class="flex flex-none relative align-middle justify-end lg:ml-4">
+			<div>  
+				<ThemeSwitcher />			
+			</div>
 			<div>
 				<Cart bind:cart={cart} bind:count={count} />
 			</div>
