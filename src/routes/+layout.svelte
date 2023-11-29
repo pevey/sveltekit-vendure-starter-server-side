@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '$src/app.postcss'
+	import '$src/app.pcss'
 	import type { PageData } from './$types'
 	import type { Collection, Customer, Order } from '$lib/generated/graphql'
 	import { page } from '$app/stores'
