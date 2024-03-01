@@ -111,7 +111,7 @@
 				{/if}
 				<Field form={signInForm} name="token">
 					<Control let:attrs>
-						<input {...attrs} type="hidden" bind:value={$signInFormData.token} class="input" />
+						<input {...attrs} type="hidden" bind:value={$signInFormData.token} />
 					</Control>
 				</Field>
 				<Field form={signInForm} name="email">
