@@ -18,7 +18,7 @@ This project is under active development.  Breaking changes will frequently occu
 npm install -g degit
 
 # create a new project in my-app
-degit https://github.com/pevey/sveltekit-vendure-starter.git my-app
+degit https://github.com/pevey/sveltekit-vendure-starter-server-side.git my-app
 ```
 
 ## Installing packages
