@@ -1,6 +1,6 @@
 # SvelteKit eCommerce Store Starter App for Vendure
 
-![Preview](https://github.com/pevey/sveltekit-medusa-starter-server-side/assets/7490308/e2b4fa4e-eb31-4082-aba3-b1cc26044ca0)
+![Preview](https://github.com/pevey/sveltekit-medusa-starter/assets/7490308/e2b4fa4e-eb31-4082-aba3-b1cc26044ca0)
 
 If you are not familiar with Vendure, you can learn more on [the project web site](https://www.vendure.io/).  Vendure is an open-source, MIT-licensed, Node.js-based ecommerce backend with tons of flexibility.  You can use it to power practically any ecommerce application you could think of.
 
