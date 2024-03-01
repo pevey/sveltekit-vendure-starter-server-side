@@ -2,8 +2,8 @@
 	import type { Writable } from 'svelte/store'
 	import type { Order } from '$lib/generated/graphql'
 	import { getContext } from 'svelte'
-	import { formatCurrency } from '$lib/saluna/utils'
-	import VendureAsset from '$lib/saluna/VendureAsset.svelte'
+	import { formatCurrency } from '$lib/utils'
+	import VendureAsset from '$lib/components/VendureAsset.svelte'
 
 	export let currency: string
 	const order: Writable<Order> = getContext('order')

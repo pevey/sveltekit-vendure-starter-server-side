@@ -1,27 +1,23 @@
 <script lang="ts">
-	import Rating from '$lib/saluna/Rating.svelte'
+	import Rating from '$lib/components/Rating.svelte'
 	import { Turnstile } from 'sveltekit-turnstile'
 	import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public'
-	import { superForm } from 'sveltekit-superforms/client'
-	import { z } from 'zod'
+	import { superForm } from 'sveltekit-superforms'
+	import { zodClient } from 'sveltekit-superforms/adapters'
+	import { addReviewReq } from '$lib/validators'
 
 	export let reviewForm
 	export let product: any = null
 	export let user: any = null
 	export let reviews: any = []
+	let token: string = '' // turnstile token
 
 	let addReview = false
 	let processing = false
 
 	const { form, errors, message, enhance }  
 		= superForm(reviewForm, { 
-			resetForm: true,
-			validators: z.object({
-				displayName: z.string().min(1).max(100),
-				content: z.string().min(1).max(1000),
-				rating: z.coerce.number().min(1).max(5).default(5)
-			}), 
-			defaultValidator: 'clear',
+			validators: zodClient(addReviewReq),
 			onSubmit: () => {
 				processing = true
 			},
@@ -32,6 +28,8 @@
 				}
 			}
 		})
+		$form.productId = product.id
+		$form.token = token
 </script>
 
 <div id="tab-panel-reviews" aria-labelledby="tab-reviews" role="tabpanel" tabindex="0">
@@ -45,7 +43,11 @@
 
 	{#if addReview}
 	<form method="POST" id="addReview" action="?/addReview" class="space-y-6 mb-4" use:enhance>
-		<Turnstile theme="light" siteKey={PUBLIC_TURNSTILE_SITE_KEY} />
+		<Turnstile 
+			theme="light" 
+			siteKey={PUBLIC_TURNSTILE_SITE_KEY} 
+			on:turnstile-callback={(e) => { token = e.detail.token }}
+		/>
 		<input type="hidden" name="productId" value={product.id} />
 		<div class="flex flex-col sm:flex-row">
 			<div class="sm:w-1/2">

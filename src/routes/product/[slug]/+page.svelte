@@ -1,22 +1,22 @@
 <script lang="ts">
 	import type { PageData } from './$types'
+	import xss from 'xss'
 	import type { Customer, Product } from '$lib/generated/graphql'
 	import { queryParam } from 'sveltekit-search-params'
 	import { page } from '$app/stores'
 	import { enhance } from '$app/forms'  
 	import { invalidateAll } from '$app/navigation'
 	import { PUBLIC_DEFAULT_CURRENCY } from '$env/static/public'
-	import { formatCurrency } from '$lib/saluna/utils'
-	import MetaTags from '$lib/saluna/MetaTags.svelte'
-	import Rating from '$lib/saluna/Rating.svelte'
-	import ProductReviews from '$lib/saluna/ProductReviews.svelte'
-	import FAQ from '$lib/saluna/FAQ.svelte'
-	import Gallery from '$lib/saluna/Gallery.svelte'
-	import Highlights from '$lib/saluna/Highlights.svelte'
+	import { formatCurrency } from '$lib/utils'
+	import MetaTags from '$lib/components/MetaTags.svelte'
+	import Rating from '$lib/components/Rating.svelte'
+	import ProductReviews from '$lib/components/ProductReviews.svelte'
+	import FAQ from '$lib/components/FAQ.svelte'
+	import Gallery from '$lib/components/Gallery.svelte'
+	import Highlights from '$lib/components/Highlights.svelte'
 	export let data: PageData
 	$: product = data.product as Product
 	$: user = data.user as Customer
-	let reviewForm = data.reviewForm
 	// let reviews = product.reviews as any
 	let reviews: any = []
 	// let images = product.images as any
@@ -29,7 +29,7 @@
 		<h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">{product.name}</h1>
 		<h2 id="information-heading" class="sr-only">Product information</h2>
 		<!-- <Rating rating={product.rating} /> -->
-		<p class="mt-6">{product.description}</p>
+		<p class="mt-6">{@html xss(product.description)}</p>
 		{#if (product.variants.length > 1)}
 			<div class="mt-6">
 				{#each product.variants as variant}
@@ -100,7 +100,7 @@
 			</button>
 		</div>
 		{#if tab == 'reviews'}
-			<ProductReviews bind:reviewForm={reviewForm} {product} {user} {reviews} />
+			<ProductReviews bind:reviewForm={data.reviewForm} {product} {user} {reviews} />
 		{:else if tab == 'faq'}
 			<FAQ/>
 		{/if}

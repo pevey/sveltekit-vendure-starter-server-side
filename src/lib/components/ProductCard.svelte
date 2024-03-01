@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { SearchResult } from '$lib/generated/graphql'
-	import VendureAsset from '$lib/saluna/VendureAsset.svelte'
+	import VendureAsset from '$lib/components/VendureAsset.svelte'
 	export let product: SearchResult
 </script>
 

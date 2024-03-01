@@ -1,5 +1,5 @@
 import { Form as FormSnap } from 'formsnap'
-import HiddenInput from '$lib/saluna/HiddenInput.svelte'
+import HiddenInput from '$lib/components/HiddenInput.svelte'
 
 const Form = FormSnap.Root
 const Field = FormSnap.Field

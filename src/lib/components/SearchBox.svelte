@@ -2,7 +2,7 @@
 	import type { SearchResult } from '$lib/generated/graphql'
 	import { enhance } from '$app/forms'
 	import { clickOutside } from '$lib/utils'
-	import SearchHit from '$lib/saluna/SearchHit.svelte'
+	import SearchHit from '$lib/components/SearchHit.svelte'
 	
 	let q: string = ''
 	let hits: SearchResult[] = []

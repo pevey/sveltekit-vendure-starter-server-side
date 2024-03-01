@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { SearchResult } from '$lib/generated/graphql'
-	import MetaTags from '$lib/saluna/MetaTags.svelte'
-	import SearchHit from '$lib/saluna/SearchHit.svelte'
+	import MetaTags from '$lib/components/MetaTags.svelte'
+	import SearchHit from '$lib/components/SearchHit.svelte'
 	import { enhance } from '$app/forms'
 	import { queryParam } from 'sveltekit-search-params'
 	const q = queryParam('q')

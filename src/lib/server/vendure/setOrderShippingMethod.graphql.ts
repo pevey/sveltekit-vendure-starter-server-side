@@ -1,7 +1,7 @@
 import { gql } from '$lib/generated'
 import { query } from '.'
 
-export const setOrderShippingMethod = async function(locals: App.Locals, id: number) {
+export const setOrderShippingMethod = async function(locals: App.Locals, id: string) {
 	const SetOrderShippingMethod = gql(`
 		mutation SetOrderShippingMethod($id: [ID!]!) {
 			setOrderShippingMethod(shippingMethodId: $id) {

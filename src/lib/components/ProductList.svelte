@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ProductCard from '$lib/saluna/ProductCard.svelte'
+	import ProductCard from '$lib/components/ProductCard.svelte'
 	export let products: any
 	$: products = products || []
 </script>

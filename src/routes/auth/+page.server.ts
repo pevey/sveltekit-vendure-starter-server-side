@@ -1,10 +1,11 @@
 import type { PageServerLoad, Actions } from './$types'
 import { redirect } from '@sveltejs/kit'
-import { message, superValidate } from 'sveltekit-superforms/server'
 import { validateToken } from 'sveltekit-turnstile'
-import { SECRET_TURNSTILE_KEY } from '$env/static/private'
-import { signInReq, signUpReq, forgotReq, resetReq } from '$lib/saluna/validators'
+import { message, superValidate } from 'sveltekit-superforms'
+import { zod } from 'sveltekit-superforms/adapters'
+import { signInReq, signUpReq, forgotReq, resetReq } from '$lib/validators'
 import { signIn, signOut, signUp, resetPassword, requestPasswordReset } from '$lib/server/vendure'
+import { SECRET_TURNSTILE_KEY } from '$env/static/private'
 
 export const load: PageServerLoad = async ({ locals, url }) => {
 
@@ -14,10 +15,10 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 	if (locals.user) throw redirect(302, `/${rurl}`)
 
-	const signInForm = await superValidate(signInReq, { id: 'signIn' })
-	const signUpForm = await superValidate(signUpReq, { id: 'signUp' })
-	const forgotForm = await superValidate(forgotReq, { id: 'forgot' })
-	const resetForm = await superValidate(resetReq, { id: 'reset' })
+	const signInForm = await superValidate(zod(signInReq), { id: 'signIn' })
+	const signUpForm = await superValidate(zod(signUpReq), { id: 'signUp' })
+	const forgotForm = await superValidate(zod(forgotReq), { id: 'forgot' })
+	const resetForm = await superValidate(zod(resetReq), { id: 'reset' })
 
 	return {
 		code,
@@ -32,7 +33,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 export const actions: Actions = {
 
 	signIn: async ({ request, locals, cookies }) => {
-		const form = await superValidate(request, signInReq, { id: 'signIn' })
+		const form = await superValidate(request, zod(signInReq), { id: 'signIn' })
 		if (!form.valid) return message(form, 'Something went wrong', { status: 500}) // this shouldn't happen because of client-side validation
 		if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) return message(form, 'Bot defense', { status: 420 })
 		const result = await signIn(locals, cookies, form.data.email.toLowerCase(), form.data.password)
@@ -48,7 +49,7 @@ export const actions: Actions = {
 	},
 
 	signUp: async ({ request, locals, cookies }) => {
-		const form = await superValidate(request, signUpReq, { id: 'signUp' })
+		const form = await superValidate(request, zod(signUpReq), { id: 'signUp' })
 		if (!form.valid) return message(form, 'Something went wrong', { status: 500}) // this shouldn't happen because of client-side validation
 		if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) return message(form, 'Bot defense', { status: 420 })
 		const result = await signUp(locals, cookies, {
@@ -67,7 +68,7 @@ export const actions: Actions = {
 	},
 	
 	forgot: async ({ request }) => {
-		const form = await superValidate(request, forgotReq, { id: 'forgot' })
+		const form = await superValidate(request, zod(forgotReq), { id: 'forgot' })
 		if (!form.valid) return message(form, 'Something went wrong', { status: 500}) // this shouldn't happen because of client-side validation
 		if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) return message(form, 'Bot defense', { status: 420 })
 		const result = await requestPasswordReset(form.data.email)
@@ -82,7 +83,7 @@ export const actions: Actions = {
 	},
 	
 	reset: async ({ request }) => {
-		const form = await superValidate(request, resetReq, { id: 'reset' })
+		const form = await superValidate(request, zod(resetReq), { id: 'reset' })
 		if (!form.valid) return message(form, 'Something went wrong', { status: 500}) // this shouldn't happen because of client-side validation
 		if (!(await validateToken(form.data.token, SECRET_TURNSTILE_KEY))) return message(form, 'Bot defense', { status: 420 })
 		const result = await resetPassword(form.data.code, form.data.password )

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Collection, Customer, Order } from '$lib/generated/graphql'
-	import Cart from '$lib/saluna/Cart.svelte'
-	import Account from '$lib/saluna/Account.svelte'
-	import SearchBox from '$lib/saluna/SearchBox.svelte'
-	import SideBar from '$lib/saluna/SideBar.svelte'
+	import Cart from '$lib/components/Cart.svelte'
+	import Account from '$lib/components/Account.svelte'
+	import SearchBox from '$lib/components/SearchBox.svelte'
+	import SideBar from '$lib/components/SideBar.svelte'
 	import ThemeSwitcher from './ThemeSwitcher.svelte'
 	export let collections: Collection[]
 	export let user: Customer|null

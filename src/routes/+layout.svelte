@@ -3,8 +3,8 @@
 	import type { PageData } from './$types'
 	import type { Collection, Customer, Order } from '$lib/generated/graphql'
 	import { page } from '$app/stores'
-	import NavBar from '$lib/saluna/NavBar.svelte'
-	import Footer from '$lib/saluna/Footer.svelte'
+	import NavBar from '$lib/components/NavBar.svelte'
+	import Footer from '$lib/components/Footer.svelte'
 	export let data: PageData
 	const collections: Collection[] = data?.collections
 	const nakedPaths = ['/auth', '/checkout', '/sitemap.xml']

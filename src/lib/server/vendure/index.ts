@@ -1,6 +1,12 @@
 import { SuperFetch } from 'sveltekit-superfetch'
 import { print, type ASTNode } from 'graphql'
-import { config } from '../../../saluna.config'
+import { dev } from '$app/environment'
+import {  
+	VENDURE_SHOPAPI_DEV_URL,
+	VENDURE_SHOPAPI_PROD_URL,
+	// CLOUDFLARE_ACCESS_ID,
+	// CLOUDFLARE_ACCESS_SECRET
+} from '$env/static/private'
 
 export const superFetch = new SuperFetch({
 	retry: 3,
@@ -24,17 +30,16 @@ export const query = async function(options: QueryOptions): Promise<Response|nul
 	const { locals, document, variables, ...rest } = options
 
 	const headers = new Headers({ 'Content-Type': 'application/json' })
-	if (config.vendure.shopApiHeaders) {
-		for (let header of config.vendure.shopApiHeaders) {
-			headers.append(header.key, header.value)
-		}
-	}
+	// if (CLOUDFLARE_ACCESS_ID && CLOUDFLARE_ACCESS_SECRET) {
+	// 	headers.append('CF-Access-Client-Id', CLOUDFLARE_ACCESS_ID)
+	// 	headers.append('CF-Access-Client-Secret', CLOUDFLARE_ACCESS_SECRET)
+	// }
 	if (locals && locals.sid && locals.ssig) {
 		headers.append('Cookie', `session=${locals.sid}; session.sig=${locals.ssig}`)
 	}
 
 	return await superFetch.query({
-		url: config.vendure.shopApiUrl,
+		url: dev? VENDURE_SHOPAPI_DEV_URL : VENDURE_SHOPAPI_PROD_URL,
 		method: 'POST',
 		headers,
 		body: JSON.stringify({

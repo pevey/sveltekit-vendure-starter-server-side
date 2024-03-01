@@ -1,6 +1,5 @@
 import type { Handle } from '@sveltejs/kit'
 import { handleVendureRequest } from '$lib/server/vendure'
-import { config } from './saluna.config'
 
 export const handle: Handle = async ({ event, resolve }) => {
 
@@ -9,9 +8,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/checkout/success')) {
 		await new Promise(resolve => setTimeout(resolve, 500))
 	}
-
-	// STASH THE CONFIG IN LOCALS
-	event.locals.config = config
 
 	// VENDURE SESSION MIDDLEWARE  
 	// Sets locals.user and locals.cart if a vendure session is found.

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Star from '$lib/saluna/Star.svelte'
+	import Star from '$lib/components/Star.svelte'
 	export let rating: number
 	//create dummy array of length 5 to display stars
 	let stars = Array.from({length: 5}, (v, i) => i)

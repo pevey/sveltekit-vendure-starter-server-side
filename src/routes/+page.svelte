@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Product, Collection } from '$lib/generated/graphql'
 	import type { PageData } from './$types'
-	import MetaTags from '$lib/saluna/MetaTags.svelte'
+	import MetaTags from '$lib/components/MetaTags.svelte'
 	// import Swipe from '$lib/saluna/Swipe.svelte'
 	// import SwipeItem from '$lib/saluna/SwipeItem.svelte'
 	// const swipeConfig = {

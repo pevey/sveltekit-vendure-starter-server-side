@@ -1,16 +1,6 @@
-import type { PageServerLoad, Actions } from './$types'
+import type { Actions } from './$types'
 import { setOrderState } from '$lib/server/vendure'
 import { fail } from '@sveltejs/kit'
-
-export const load: PageServerLoad = async function ({ locals }) {
-	return {
-		localPickupCode: locals.config.vendure.localPickupCode,
-		defaultCurrency: locals.config.vendure.defaultCurrency,
-		siteName: locals.config.site.siteName,
-		turnstileKey: locals.config.turnstile.publicKey,
-		stripeKey: locals.config.stripe.publicKey,
-	}
-}
 
 export const actions: Actions = {
 	default: async ({ locals }) => {

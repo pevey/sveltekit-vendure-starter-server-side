@@ -2586,6 +2586,7 @@ export type ProductCustomFields = {
   featuredReview?: Maybe<ProductReview>;
   reviewCount?: Maybe<Scalars['Float']['output']>;
   reviewRating?: Maybe<Scalars['Float']['output']>;
+  shortDescription?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProductFilterParameter = {
@@ -2596,6 +2597,7 @@ export type ProductFilterParameter = {
   name?: InputMaybe<StringOperators>;
   reviewCount?: InputMaybe<NumberOperators>;
   reviewRating?: InputMaybe<NumberOperators>;
+  shortDescription?: InputMaybe<StringOperators>;
   slug?: InputMaybe<StringOperators>;
   updatedAt?: InputMaybe<DateOperators>;
 };
@@ -2748,6 +2750,7 @@ export type ProductSortParameter = {
   name?: InputMaybe<SortOrder>;
   reviewCount?: InputMaybe<SortOrder>;
   reviewRating?: InputMaybe<SortOrder>;
+  shortDescription?: InputMaybe<SortOrder>;
   slug?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
 };

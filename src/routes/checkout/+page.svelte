@@ -9,9 +9,16 @@
 	import { writable } from 'svelte/store'
 	import { setContext } from 'svelte'
 	import { browser, dev } from '$app/environment'
-	import { formatCurrency } from '$lib/saluna/utils'
-	import CheckoutOrderSummary from '$lib/saluna/CheckoutOrderSummary.svelte'
-	import MetaTags from '$lib/saluna/MetaTags.svelte'
+	import { 
+		PUBLIC_DEFAULT_CURRENCY,
+		PUBLIC_LOCAL_PICKUP_CODE,
+		PUBLIC_SITE_NAME,
+		PUBLIC_STRIPE_KEY,
+		PUBLIC_TURNSTILE_SITE_KEY,
+	} from '$env/static/public'
+	import { formatCurrency } from '$lib/utils'
+	import CheckoutOrderSummary from '$lib/components/CheckoutOrderSummary.svelte'
+	import MetaTags from '$lib/components/MetaTags.svelte'
 
 	export let data: PageData
 	const customer = writable<Customer>(data.user)
@@ -27,7 +34,7 @@
 	let firstName: string
 	let lastName: string
 	let shippingOptions: ShippingMethodQuote[]
-	let selectedShippingOption: number
+	let selectedShippingOption: string
 	let paymentOptions: PaymentMethod[]
 	let delivery: 'ship'|'pickup' = 'ship'
 	let processing = false
@@ -65,7 +72,7 @@
 			.then(res => res.json()).catch(e => { if (dev) console.log(e) })
 	}
 
-	const setShippingOption = async (id: number) => {
+	const setShippingOption = async (id: string) => {
 		$order = await fetch('/checkout/set-shipping-option', { 
 			method: 'POST', 
 			body: JSON.stringify({ id })
@@ -76,25 +83,25 @@
 		// set cheapest shipping option as default, but make sure it is not local pickup
 		if (shippingOptions) {
 			let index = 0
-			if (data.localPickupCode) {
-				let pickupIndex = +shippingOptions.findIndex(v => v.code === data.localPickupCode)
+			if (PUBLIC_LOCAL_PICKUP_CODE) {
+				let pickupIndex = shippingOptions.findIndex(v => v.code === PUBLIC_LOCAL_PICKUP_CODE)
 				if (pickupIndex === index) index += 1
 			}
 			if (index === shippingOptions.length) {
 				errorMessage = 'There are no shipping options available.'
 			} else {
-				selectedShippingOption = +shippingOptions[index].id
+				selectedShippingOption = shippingOptions[index].id
 			}
 		}
 	}
 	
 	const selectPickupOption = async () => {
 		if (shippingOptions) {
-			let pickupIndex = +shippingOptions.findIndex(v => v.code === data.localPickupCode)
+			let pickupIndex = shippingOptions.findIndex(v => v.code === PUBLIC_LOCAL_PICKUP_CODE)
 			if (pickupIndex === -1) {
 				errorMessage = 'Something went wrong while setting the shipping option to local pickup.'
 			} else {
-				selectedShippingOption = +shippingOptions[pickupIndex].id                    
+				selectedShippingOption = shippingOptions[pickupIndex].id                    
 			}
 		}
 	}
@@ -132,7 +139,7 @@
 {#if (!$order?.lines)}
 	<p>Your cart is empty.</p>
 {:else if !token}
-	<Turnstile theme="light" siteKey={data.turnstileKey} on:turnstile-callback={ async (e) => { 
+	<Turnstile theme="light" siteKey={PUBLIC_TURNSTILE_SITE_KEY} on:turnstile-callback={ async (e) => { 
 		token = e.detail.token
 		await startCheckout(token)
 	}} />
@@ -142,24 +149,24 @@
 		<div class="px-4 py-6 sm:px-6 lg:hidden">
 			<div class="mx-auto flex max-w-lg">
 				<h1 class="sr-only">Checkout</h1>
-				<a href="/"><img src="/logo.png" class="mx-auto h-14 w-auto" alt="{data.siteName}" /></a>
+				<a href="/"><img src="/logo.png" class="mx-auto h-14 w-auto" alt="{PUBLIC_SITE_NAME}" /></a>
 			</div>
 		</div>
-		<CheckoutOrderSummary currency={data.defaultCurrency} />
+		<CheckoutOrderSummary currency={PUBLIC_DEFAULT_CURRENCY} />
 		<section aria-labelledby="payment-heading" class="flex-auto px-4 pb-16 pt-6 sm:pt-8 sm:px-6 lg:px-8 lg:pb-4 overflow-auto">
 			<div class="mx-auto max-w-lg">
 				<!-- Logo on lg screen -->
 				<div class="hidden py-10 lg:flex">
 					<h1 class="sr-only">Checkout</h1>
-					<a href="/"><img src="/logo.png" alt="{data.siteName}" class="h-14 w-auto"></a>
+					<a href="/"><img src="/logo.png" alt="{PUBLIC_SITE_NAME}" class="h-14 w-auto"></a>
 				</div>
 				<!-- Checkout Form -->
-				<Elements publicKey={data.stripeKey} let:stripe let:elements elementsOptions={{ 
+				<Elements publicKey={PUBLIC_STRIPE_KEY} let:stripe let:elements elementsOptions={{ 
 					appearance: { 
 						theme: 'stripe',
 					},
 					mode: 'payment',
-					currency: data.defaultCurrency.toLowerCase(),
+					currency: PUBLIC_DEFAULT_CURRENCY.toLowerCase(),
 					amount: $order.total
 				}}>
 					<form class="grid gap-y-8" method="POST" use:enhance={ async ({ formData, cancel }) => {
@@ -276,7 +283,8 @@
 								}}
 							/>
 						</section>
-						{#if data.localPickupCode}
+						{#if PUBLIC_LOCAL_PICKUP_CODE}
+						{PUBLIC_LOCAL_PICKUP_CODE}
 							<section id="delivery">
 								<h3 class="mb-3 text-xl font-medium text-gray-900" id="payment-heading">Delivery</h3>
 								<div role="radiogroup" class="rounded-md overflow-hidden border">
@@ -327,12 +335,14 @@
 							<h3 class="mb-3 text-xl font-medium text-gray-900" id="payment-heading">Shipping Method</h3>
 							<select bind:value={selectedShippingOption} required class="block w-full rounded-md border-gray-200 focus:border-2 focus:border-violet-600 text-gray-600 py-3">
 								{#each shippingOptions as shippingOption}
-									<option value={parseInt(shippingOption.id)}>{shippingOption.name} {formatCurrency(shippingOption.price, data.defaultCurrency)}</option>
+									<option value={shippingOption.id}>{shippingOption.name} {formatCurrency(shippingOption.price, PUBLIC_DEFAULT_CURRENCY)}</option>
 								{:else}
 									No shipping options available
 								{/each}
 							</select>
 						</section>
+						{:else}
+							Enter name and address above to see shipping getOptions.
 						{/if}
 						<!-- Payment -->
 						<section id="payment">

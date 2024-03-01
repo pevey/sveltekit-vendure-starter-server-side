@@ -6,8 +6,8 @@
    import { enhance } from '$app/forms'
    import { invalidateAll } from '$app/navigation'
    import { PUBLIC_DEFAULT_CURRENCY } from '$env/static/public'
-   import { formatCurrency } from '$lib/saluna/utils'
-   import VendureAsset from '$lib/saluna/VendureAsset.svelte'
+   import { formatCurrency } from '$lib/utils'
+   import VendureAsset from '$lib/components/VendureAsset.svelte'
 
    export let cart: Order|null
    export let count: number
